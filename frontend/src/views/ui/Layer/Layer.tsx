@@ -1,6 +1,8 @@
+import clsx from "clsx";
+
 import type LayerProps from "./type";
 import styles from "./Layer.module.scss";
-import clsx from "clsx";
+
 
 export const Layer: React.FC<LayerProps> = ({ children, type, otherStyles }) => {
   return (

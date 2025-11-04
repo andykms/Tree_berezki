@@ -1,6 +1,6 @@
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
 
-type TLayerTypes = "base" | "transparent" | "semiTransparent";
+type TLayerTypes = "base" | "transparent" | "semiTransparent" | "secondary";
 
 export default interface LayerProps {
   children: React.ReactNode;

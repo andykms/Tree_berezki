@@ -1,0 +1,26 @@
+.button {
+  block-size: auto;
+  inline-size: auto;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.primary {
+  background-color: var(--primary-color);
+}
+
+.secondary {
+  background-color: var(--secondary-color);
+}
+
+.tertiary {
+  background-color: var(--layer-color);
+}
+
+.transparent {
+  background-color: inherit;
+}
+
+.semiTransparent {
+  background-color: var(--trans-back-color);
+}
