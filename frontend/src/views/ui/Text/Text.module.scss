@@ -1,0 +1,50 @@
+.main {
+  color: var(--sign-color);
+}
+
+.header {
+  color: var(--sign-color);
+  font-weight: bold;
+}
+
+.description {
+  color: var(--rest-color);
+}
+
+.primary {
+  color: var(--primary-color);
+}
+
+//"12px" | "14px" | "16px" | "20px" | "24px" | "48px"
+
+.small {
+  font-size: 12px;
+}
+
+.small2 {
+  font-size: 14px;
+}
+
+.main {
+  font-size: 16px;
+}
+
+.main2 {
+  font-size: 20px;
+}
+
+.big {
+  font-size: 24px;
+}
+
+.big2 {
+  font-size: 48px;
+}
+
+.serif {
+  font-family: var(--font-family-serif);
+}
+
+.sansSerif {
+  font-family: var(--font-family-sans-serif);
+}

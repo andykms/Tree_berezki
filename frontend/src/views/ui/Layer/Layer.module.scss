@@ -1,0 +1,19 @@
+.layer {
+  block-size: 100%;
+  inline-size: 100%;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.base {
+  background-color: var(--layer-color);
+}
+
+.transparent {
+  background-color: inherit;
+  border-radius: 0;
+}
+
+.semiTransparent {
+  background-color: var(--trans-back-color);
+}
