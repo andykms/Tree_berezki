@@ -1,6 +1,10 @@
+export interface IQuestions {
+  questions: IQuestion[];
+  productId: string;
+}
+
 export interface IQuestion {
   id: string;
-  productId: string;
   user: IQuestionUser;
   question: string;
   answer: string;

@@ -10,7 +10,6 @@ export interface IReview {
   likes: number;
   dislikes: number;
   images: string[];
-  replies: IReviewReply[];
 }
 
 export interface IReviewUser {
@@ -20,12 +19,5 @@ export interface IReviewUser {
   isShop: boolean;
 }
 
-export interface IReviewReply {
-  id: string;
-  reviewId: string;
-  user: IReviewUser;
-  comment: string;
-  date: Date;
-}
 
 
