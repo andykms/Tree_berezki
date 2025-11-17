@@ -20,7 +20,9 @@ export class Account {
   })
   sex: "male" | "female" | "not specified"
 
-  @Column()
+  @Column({
+    unique: true
+  })
   email: string;
 
   @Column({
@@ -45,3 +47,4 @@ export class Account {
   @OneToMany(() => Basket, basket => basket.account)
   baskets: Basket[];
 }
+

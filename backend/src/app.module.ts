@@ -12,12 +12,23 @@ import { ShopModule } from './shop/shop.module';
 import { BasketModule } from './basket/basket.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { configuration, type IConfig } from './config/app.config';
+import { CookieExtractorService } from './cookie-extractor/cookie-extractor.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: "./env",
+      load: [configuration],
       isGlobal: true
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      inject: [configuration.KEY],
+      useFactory: (config: IConfig) => ({
+        secret: config.accessTokenSecret,
+        signOptions: { expiresIn: config.accessTokenExpiresIn },
+      }),
     }),
     UserModule,
     AccountModule,
@@ -31,6 +42,6 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CookieExtractorService],
 })
 export class AppModule {}

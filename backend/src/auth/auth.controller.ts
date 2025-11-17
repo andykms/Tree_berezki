@@ -1,34 +1,54 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Req, Res, UseGuards, Ip } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { UserService } from '../user/user.service';
+import { LocalGuard } from './guards/local.guard';
+import { RefreshGuard } from './guards/refreshToken.guard';
+
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UserService,
+  ) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('register')
+  async register(@Body() createAuthDto: CreateAuthDto, @Req() req, @Res() res, @Ip() ip) {
+    const user = await this.usersService.create(createAuthDto);
+    const userAgent = req.headers['user-agent'];
+    return await this.authService.auth(user, res, ip, userAgent);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @UseGuards(LocalGuard)
+  @Post('login')
+  async login(@Req() req, @Res() res, @Ip() ip) {
+    const userAgent = req.headers['user-agent'];
+    return await this.authService.auth(req.user, res, ip, userAgent);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @UseGuards(RefreshGuard)
+  @Post('refresh')
+  async refresh(@Req() req) {
+    await this.authService.verifyAllTokens(req.user);
+    return await this.authService.refresh(req.user);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
+  @UseGuards(RefreshGuard)
+  @Post("logout")
+  async logout(@Req() req, @Res() res) {
+    await this.authService.logout(req.refreshToken, req.user, res);
+    return {
+      message: "ok"
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @UseGuards(RefreshGuard)
+  @Post("logoutAll")
+  async logoutAll(@Req() req, @Res() res) {
+    await this.authService.logoutAll(req.user, res);
+    return {
+      message: "ok"
+    }
   }
 }
