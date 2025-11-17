@@ -1,11 +1,18 @@
-import { OneToMany, OneToOne, ManyToOne, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { User } from "../../user/entities/user.entity";
-import { LegalInfo } from "./legal-info.entity";
-import { ShowcaseProducts } from "./showcase-products.entity";
+import {
+  OneToMany,
+  BeforeInsert,
+  ManyToOne,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
+import { ShowcaseProducts } from './showcase-products.entity';
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class Shop {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({
@@ -15,15 +22,16 @@ export class Shop {
   name: string;
 
   @Column({
-    type: "decimal",
+    type: 'decimal',
     precision: 2,
     scale: 1,
+    default: 0,
   })
   rating: number;
 
   @Column({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   created_at: Date;
 
@@ -33,9 +41,45 @@ export class Shop {
   @ManyToOne(() => User, (user) => user.shops)
   user: User;
 
-  @OneToOne(() => LegalInfo, (legalInfo) => legalInfo.shop)
-  legalInfo: LegalInfo;
+  @Column({
+    length: 128,
+  })
+  organization: string;
 
-  @OneToMany(() => ShowcaseProducts, (showcaseProducts) => showcaseProducts.shop)
+  @Column({
+    length: 12,
+  })
+  INN: string;
+
+  @Column({
+    length: 13,
+  })
+  OGRN: string;
+
+  @Column({
+    length: 128,
+  })
+  country: string;
+
+  @Column()
+  password: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  @Column({
+    type: 'enum',
+    enum: ['work', 'blocked', 'deleted'],
+    default: 'work',
+  })
+  status: 'work' | 'blocked' | 'deleted';
+
+  @OneToMany(
+    () => ShowcaseProducts,
+    (showcaseProducts) => showcaseProducts.shop,
+    { onDelete: 'CASCADE' },
+  )
   showcaseProducts: ShowcaseProducts[];
 }

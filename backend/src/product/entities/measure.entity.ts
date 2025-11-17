@@ -1,6 +1,6 @@
-import { OneToMany,Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { Param } from "./param.entity";
-import { RequiredParam } from "../../category/entities/required-param.entity";
+import { OneToMany, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Param } from './param.entity';
+import { RequiredParam } from '../../category/entities/required-param.entity';
 
 @Entity()
 export class Measure {

@@ -1,13 +1,21 @@
-import { IsString, IsNotEmpty, MaxLength, MinLength, IsEnum, Max, IsEmail } from "class-validator";
+import {
+  IsString,
+  IsNotEmpty,
+  MaxLength,
+  MinLength,
+  IsEnum,
+  Max,
+  IsEmail,
+} from 'class-validator';
 
-const sexTypes = ["male", "female", "not specified"];
+const sexTypes = ['male', 'female', 'not specified'];
 
 export class CreateAccountDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(30)
   @MinLength(3)
-  name: string
+  name: string;
 
   @IsEnum(sexTypes)
   @IsNotEmpty()
@@ -20,5 +28,5 @@ export class CreateAccountDto {
   @IsNotEmpty()
   @MinLength(5)
   @MaxLength(255)
-  email: string
+  email: string;
 }

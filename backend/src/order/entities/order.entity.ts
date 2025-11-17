@@ -1,20 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from "typeorm";
-import { Account } from "../../account/entities/account.entity";
-import { Product } from "../../product/entities/product.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
+import { Account } from '../../account/entities/account.entity';
+import { OrderProduct } from './order-product';
 
+@Entity()
 export class Order {
-  @PrimaryGeneratedColumn("uuid")
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   address: string;
 
   @Column({
-    type: "enum",
-    enum: ["true", "false"],
-    default: "false"
+    type: 'enum',
+    enum: ['true', 'false'],
+    default: 'false',
   })
-  privateSector: 'true' | 'false'
+  privateSector: 'true' | 'false';
 
   @Column()
   entrance: string;
@@ -29,9 +37,9 @@ export class Order {
   flat: string;
 
   @Column({
-    type: "enum",
-    enum: ["true", "false"],
-    default: "false"
+    type: 'enum',
+    enum: ['true', 'false'],
+    default: 'false',
   })
   freightElevator: 'true' | 'false';
 
@@ -45,7 +53,7 @@ export class Order {
   phone: string;
 
   @Column({
-    default: null
+    default: null,
   })
   secondPhone: string;
 
@@ -53,8 +61,8 @@ export class Order {
   delivaryDate: Date;
 
   @Column({
-    type: "enum",
-    enum: ["morning", "afternoon", "evening"],
+    type: 'enum',
+    enum: ['morning', 'afternoon', 'evening'],
   })
   delivaryTime: 'morning' | 'afternoon' | 'evening';
 
@@ -65,18 +73,20 @@ export class Order {
   total: number;
 
   @Column({
-    default: "created"
+    default: 'created',
+    type: 'enum',
+    enum: ['created', 'paid', 'delivered', 'canceled'],
   })
-  status: string;
+  status: 'created' | 'paid' | 'delivered' | 'canceled';
 
   @Column({
-    default: () => "CURRENT_TIMESTAMP"
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
-  @ManyToOne(() => Account, account => account.orders)
+  @ManyToOne(() => Account, (account) => account.orders)
   account: Account;
 
-  @ManyToMany(() => Product, product => product.orders)
-  products: Product[];
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
+  products: OrderProduct[];
 }

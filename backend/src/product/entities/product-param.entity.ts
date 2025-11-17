@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { Product } from "./product.entity";
-import { Param } from "./param.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Product } from './product.entity';
+import { Param } from './param.entity';
 
 @Entity()
 export class ProductParam {

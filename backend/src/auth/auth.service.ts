@@ -7,6 +7,7 @@ import { RefreshTokenService } from './refresh-token/refresh-token.service';
 import { ConfigService } from '@nestjs/config';
 import { type IConfig } from '../config/app.config';
 import { Response } from 'express';
+import { ShopService } from '../shop/shop.service';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,8 @@ export class AuthService {
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
     private readonly refreshService: RefreshTokenService,
-    private readonly configService: ConfigService<IConfig>
+    private readonly configService: ConfigService<IConfig>,
+    private readonly shopService: ShopService,
   ) {}
 
   async auth(user: User, res: Response, ipAddress: string, userAgent: string) {
@@ -26,27 +28,30 @@ export class AuthService {
       refreshToken,
       ipAddress,
       userAgent,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     await this.usersService.update(user.id, {
-      sessions: [...user.sessions, sessionInfo]
+      sessions: [...user.sessions, sessionInfo],
     });
 
-    res.cookie("refreshToken", {
+    res.cookie('refreshToken', {
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
-      maxAge: this.configService.get("refreshTokenExpiresIn")
-    })
+      sameSite: 'strict',
+      maxAge: this.configService.get('refreshTokenExpiresIn'),
+    });
 
     return {
       accessToken,
-      refreshToken
+      refreshToken,
     };
   }
 
-  async validatePassword(phone: string, password: string): Promise<User|null> {
+  async validatePassword(
+    phone: string,
+    password: string,
+  ): Promise<User | null> {
     const user = await this.usersService.findByPhone(phone);
     if (!user) {
       return null;
@@ -60,44 +65,50 @@ export class AuthService {
   }
 
   async refresh(user: User) {
-    const payload = {sub: user.id};
+    const payload = { sub: user.id };
     const accessToken = this.jwtService.sign(payload);
     return {
-      accessToken
-    }
+      accessToken,
+    };
   }
 
-  async logout(oldRefreshToken: string, user: User, res: Response): Promise<void> {
+  async logout(
+    oldRefreshToken: string,
+    user: User,
+    res: Response,
+  ): Promise<void> {
     await this.usersService.update(user.id, {
-      sessions: user.sessions.filter(session => session.refreshToken !== oldRefreshToken)
-    })
-    res.clearCookie("refreshToken");
+      sessions: user.sessions.filter(
+        (session) => session.refreshToken !== oldRefreshToken,
+      ),
+    });
+    res.clearCookie('refreshToken');
   }
 
   async verifyAllTokens(user: User) {
     const verifiedSessions: ISessionInfo[] = [];
     let isUpdated = false;
-    for(const session of user.sessions) {
+    for (const session of user.sessions) {
       try {
         const payload = this.jwtService.verify(session.refreshToken);
-        if(payload.sub == user.id) verifiedSessions.push(session);
+        if (payload.sub == user.id) verifiedSessions.push(session);
         else isUpdated = true;
-      } catch(error) {
+      } catch (error) {
         isUpdated = true;
       }
     }
 
-    if(isUpdated) {
+    if (isUpdated) {
       await this.usersService.update(user.id, {
-        sessions: verifiedSessions
-      })
+        sessions: verifiedSessions,
+      });
     }
   }
 
   async logoutAll(user: User, res: Response): Promise<void> {
     await this.usersService.update(user.id, {
-      sessions: []
-    })
-    res.clearCookie("refreshToken");
+      sessions: [],
+    });
+    res.clearCookie('refreshToken');
   }
 }

@@ -1,29 +1,35 @@
-import { ManyToOne,OneToMany, Entity, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
-import { ProductParam } from "./product-param.entity";
-import { Order } from "../../order/entities/order.entity";
-import { Category } from "../../category/entities/category.entity";
-import { Comment } from "../../comment/entities/comment.entity";
-import { ShowcaseProducts } from "../../shop/entities/showcase-products.entity";
-import { ProductImage } from "./product-image.entity";
-import { Basket } from "../../basket/entities/basket.entity";
+import {
+  ManyToOne,
+  OneToMany,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+} from 'typeorm';
+import { ProductParam } from './product-param.entity';
+import { Category } from '../../category/entities/category.entity';
+import { Comment } from '../../comment/entities/comment.entity';
+import { ShowcaseProducts } from '../../shop/entities/showcase-products.entity';
+import { ProductImage } from './product-image.entity';
+import { Basket } from '../../basket/entities/basket.entity';
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
 
   @Column({
-    type: "decimal",
+    type: 'decimal',
     precision: 5,
     scale: 2,
   })
   price_rubles: number;
 
   @Column({
-    type: "decimal",
+    type: 'decimal',
     precision: 5,
     scale: 2,
   })
@@ -31,38 +37,50 @@ export class Product {
 
   @Column({
     length: 1024,
-    default: ""
+    default: '',
   })
   description: string;
 
   @Column({
-    default: 0
+    default: 0,
   })
   count: number;
 
   @Column({
-    unique: true
+    unique: true,
+    type: 'int64',
   })
-  article: string;
-  
+  article: number;
+
+  @Column({
+    type: 'enum',
+    enum: ['saled', 'blocked', 'deleted'],
+    default: 'saled',
+  })
+  status: 'saled' | 'blocked' | 'deleted';
+
   @OneToMany(() => ProductParam, (productParam) => productParam.product)
   params: ProductParam[];
-
-  @ManyToMany(() => Order, (order) => order.products)
-  orders: Order[];
 
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 
-  @OneToMany(() => Comment, (comment) => comment.product)
+  @OneToMany(() => Comment, (comment) => comment.product, {
+    onDelete: 'CASCADE',
+  })
   comments: Comment[];
 
-  @ManyToOne(() => ShowcaseProducts, (showcaseProducts) => showcaseProducts.products)
+  @ManyToOne(
+    () => ShowcaseProducts,
+    (showcaseProducts) => showcaseProducts.products,
+  )
   showcaseProducts: ShowcaseProducts;
 
-  @OneToMany(() => ProductImage, (productImage) => productImage.product)
+  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+    onDelete: 'CASCADE',
+  })
   images: ProductImage[];
 
-  @OneToMany(() => Basket, (basket) => basket.product)
+  @OneToMany(() => Basket, (basket) => basket.product, { onDelete: 'CASCADE' })
   baskets: Basket[];
 }

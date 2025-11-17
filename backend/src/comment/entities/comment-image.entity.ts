@@ -1,5 +1,11 @@
-import { ManyToOne, JoinColumn, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { Comment } from "./comment.entity";
+import {
+  ManyToOne,
+  JoinColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+} from 'typeorm';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class CommentImage {
@@ -10,6 +16,6 @@ export class CommentImage {
   url: string;
 
   @ManyToOne(() => Comment, (comment) => comment.images)
-  @JoinColumn({ name: "comment_id" })
+  @JoinColumn({ name: 'comment_id' })
   comment: Comment;
 }

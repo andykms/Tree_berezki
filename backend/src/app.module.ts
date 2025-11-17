@@ -20,7 +20,7 @@ import { CookieExtractorService } from './cookie-extractor/cookie-extractor.serv
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
-      isGlobal: true
+      isGlobal: true,
     }),
     JwtModule.registerAsync({
       global: true,
@@ -39,7 +39,7 @@ import { CookieExtractorService } from './cookie-extractor/cookie-extractor.serv
     CategoryModule,
     ShopModule,
     BasketModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, CookieExtractorService],

@@ -7,10 +7,15 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { RefreshTokenService } from './refresh-token/refresh-token.service';
 import { JwtModule } from '@nestjs/jwt';
+import { ShopModule } from '../shop/shop.module';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenService],
-  imports: [UserModule, JwtModule, PassportModule.register({defaultStrategy: "local"})]
+  imports: [
+    UserModule,
+    JwtModule,
+    PassportModule.register({ defaultStrategy: 'local' }),
+  ],
 })
 export class AuthModule {}

@@ -1,7 +1,12 @@
-import { IsPhoneNumber, MaxLength, MinLength, IsString, IsNotEmpty } from "class-validator";
+import {
+  IsPhoneNumber,
+  MaxLength,
+  MinLength,
+  IsString,
+  IsNotEmpty,
+} from 'class-validator';
 
-
-const maxPhoneLen = ("+7-(999)-999-99-99").length;
+const maxPhoneLen = '+7-(999)-999-99-99'.length;
 
 export class CreateAuthDto {
   @IsPhoneNumber()

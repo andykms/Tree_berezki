@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { ShopController } from './shop.controller';
+import { UserModule } from '../user/user.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from '../auth/strategies/jwt.strategy';
+import { ProductModule } from '../product/product.module';
 
 @Module({
   controllers: [ShopController],
-  providers: [ShopService],
+  providers: [ShopService, JwtStrategy],
+  imports: [UserModule, JwtModule, ProductModule],
+  exports: [ShopService],
 })
 export class ShopModule {}

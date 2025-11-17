@@ -1,10 +1,17 @@
-import { Controller, Post, Body, Req, Res, UseGuards, Ip } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  Res,
+  UseGuards,
+  Ip,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UserService } from '../user/user.service';
 import { LocalGuard } from './guards/local.guard';
 import { RefreshGuard } from './guards/refreshToken.guard';
-
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +21,12 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async register(@Body() createAuthDto: CreateAuthDto, @Req() req, @Res() res, @Ip() ip) {
+  async register(
+    @Body() createAuthDto: CreateAuthDto,
+    @Req() req,
+    @Res() res,
+    @Ip() ip,
+  ) {
     const user = await this.usersService.create(createAuthDto);
     const userAgent = req.headers['user-agent'];
     return await this.authService.auth(user, res, ip, userAgent);
@@ -35,20 +47,20 @@ export class AuthController {
   }
 
   @UseGuards(RefreshGuard)
-  @Post("logout")
+  @Post('logout')
   async logout(@Req() req, @Res() res) {
     await this.authService.logout(req.refreshToken, req.user, res);
     return {
-      message: "ok"
-    }
+      message: 'ok',
+    };
   }
 
   @UseGuards(RefreshGuard)
-  @Post("logoutAll")
+  @Post('logoutAll')
   async logoutAll(@Req() req, @Res() res) {
     await this.authService.logoutAll(req.user, res);
     return {
-      message: "ok"
-    }
+      message: 'ok',
+    };
   }
 }
