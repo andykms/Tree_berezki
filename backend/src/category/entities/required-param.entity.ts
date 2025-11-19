@@ -13,7 +13,11 @@ export class RequiredParam {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 255,
+    unique: true,
+  })
   name: string;
 
   @ManyToOne(() => Measure, (measure) => measure.requiredParams)

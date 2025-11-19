@@ -4,8 +4,8 @@ import { Param } from './param.entity';
 
 @Entity()
 export class ProductParam {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   value: string;

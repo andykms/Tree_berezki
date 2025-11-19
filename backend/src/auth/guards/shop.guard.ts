@@ -15,7 +15,10 @@ export class ShopGuard implements CanActivate {
       const request = context.switchToHttp().getRequest();
       const user = request.user as User;
       const userShops = user.shops;
-      if (userShops.includes(request.params.shopId)) {
+      if (
+        userShops.includes(request.params.shopId) ||
+        userShops.includes(request.body.shopId)
+      ) {
         return true;
       }
       throw new UnauthorizedException('недостаточно прав');

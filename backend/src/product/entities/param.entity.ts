@@ -10,10 +10,14 @@ import { ProductParam } from './product-param.entity';
 
 @Entity()
 export class Param {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 255,
+    unique: true,
+  })
   name: string;
 
   @Column({

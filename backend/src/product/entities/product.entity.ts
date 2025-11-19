@@ -4,7 +4,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
+  Generated,
 } from 'typeorm';
 import { ProductParam } from './product-param.entity';
 import { Category } from '../../category/entities/category.entity';
@@ -46,10 +46,7 @@ export class Product {
   })
   count: number;
 
-  @Column({
-    unique: true,
-    type: 'int64',
-  })
+  @Generated('increment')
   article: number;
 
   @Column({

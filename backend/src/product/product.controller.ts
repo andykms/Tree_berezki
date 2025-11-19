@@ -10,33 +10,40 @@ import {
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { ShopGuard } from '../auth/guards/shop.guard';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseGuards(JwtGuard)
+  @UseGuards(ShopGuard)
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.productService.findAll();
+  async create(@Body() createProductDto: CreateProductDto) {
+    return await this.productService.create(createProductDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.productService.findOne(id);
   }
 
+  @UseGuards(JwtGuard)
+  @UseGuards(ShopGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return await this.productService.update(id, updateProductDto);
   }
 
+  @UseGuards(JwtGuard)
+  @UseGuards(ShopGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.productService.remove(id);
   }
 }

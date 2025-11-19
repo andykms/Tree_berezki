@@ -14,7 +14,6 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { configuration, type IConfig } from './config/app.config';
-import { CookieExtractorService } from './cookie-extractor/cookie-extractor.service';
 
 @Module({
   imports: [
@@ -42,6 +41,6 @@ import { CookieExtractorService } from './cookie-extractor/cookie-extractor.serv
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, CookieExtractorService],
+  providers: [AppService],
 })
 export class AppModule {}
