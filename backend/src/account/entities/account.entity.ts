@@ -11,6 +11,7 @@ import { Order } from '../../order/entities/order.entity';
 import { Comment } from '../../comment/entities/comment.entity';
 import { Reply } from '../../reply/entities/reply.entity';
 import { Basket } from '../../basket/entities/basket.entity';
+import { CommentLike } from '../../comment/entities/comment-likes.entity';
 
 @Entity()
 export class Account {
@@ -53,4 +54,7 @@ export class Account {
 
   @OneToMany(() => Basket, (basket) => basket.account)
   baskets: Basket[];
+
+  @OneToMany(() => CommentLike, (commentLike) => commentLike.account)
+  commentLikes: CommentLike[];
 }

@@ -9,6 +9,12 @@ import { Product } from '../../product/entities/product.entity';
 import { Account } from '../../account/entities/account.entity';
 import { Reply } from '../../reply/entities/reply.entity';
 import { CommentImage } from './comment-image.entity';
+import { CommentLike } from './comment-likes.entity';
+
+export enum EHidden {
+  'true',
+  'false',
+}
 
 @Entity()
 export class Comment {
@@ -16,10 +22,7 @@ export class Comment {
   id: string;
 
   @Column({
-    type: 'decimal',
-    precision: 2,
-    scale: 1,
-    default: '0.0',
+    type: 'integer',
   })
   rating: number;
 
@@ -43,20 +46,20 @@ export class Comment {
   })
   created_at: Date;
 
-  @Column({
-    default: 0,
-  })
-  likes: number;
-
-  @Column({
-    default: 0,
-  })
-  dislikes: number;
+  @OneToMany(() => CommentLike, (commentLike) => commentLike.comment)
+  likes: CommentLike[];
 
   @Column({
     default: 0,
   })
   replies_count: number;
+
+  @Column({
+    type: 'enum',
+    enum: EHidden,
+    default: EHidden.false,
+  })
+  hidden: EHidden;
 
   @OneToMany(() => Product, (product) => product.comments)
   product: Product;
