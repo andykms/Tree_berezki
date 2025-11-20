@@ -8,17 +8,14 @@ import {
 import { User } from '../../user/entities/user.entity';
 
 @Injectable()
-export class ShopGuard implements CanActivate {
+export class AccountGuard implements CanActivate {
   constructor() {}
   canActivate(context: ExecutionContext): boolean {
     try {
       const request = context.switchToHttp().getRequest();
       const user = request.user as User;
-      const userShops = user.shops.map((shop) => shop.id);
-      if (
-        userShops.includes(request.params.shopId) ||
-        userShops.includes(request.body.shopId)
-      ) {
+      const accounts = user.accounts.map((account) => account.id);
+      if (accounts.includes(request.body.accountId)) {
         return true;
       }
       throw new UnauthorizedException('недостаточно прав');

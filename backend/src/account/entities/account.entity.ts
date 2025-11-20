@@ -15,7 +15,7 @@ import { Basket } from '../../basket/entities/basket.entity';
 @Entity()
 export class Account {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;

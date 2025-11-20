@@ -8,6 +8,7 @@ import {
   Max,
   IsArray,
   ValidateNested,
+  IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -24,7 +25,7 @@ export class CreateProductDto {
   price_rubles: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
   @Max(80)
   discount: number;

@@ -5,9 +5,24 @@ import {
   ManyToOne,
   ManyToMany,
   OneToMany,
+  Generated,
 } from 'typeorm';
 import { Account } from '../../account/entities/account.entity';
 import { OrderProduct } from './order-product';
+
+export enum EOrderStatus {
+  CREATED = 'created',
+  PAID = 'paid',
+  DELIVERED = 'delivered',
+  CANCELED = 'canceled',
+  ONTHEWAY = 'on the way',
+}
+
+export enum EDeliveryTime {
+  MORNING = 'morning',
+  AFTERNOON = 'afternoon',
+  EVENING = 'evening',
+}
 
 @Entity()
 export class Order {
@@ -58,16 +73,16 @@ export class Order {
   secondPhone: string;
 
   @Column()
-  delivaryDate: Date;
+  deliveryDate: Date;
 
   @Column({
     type: 'enum',
-    enum: ['morning', 'afternoon', 'evening'],
+    enum: EDeliveryTime,
   })
-  delivaryTime: 'morning' | 'afternoon' | 'evening';
+  deliveryTime: EDeliveryTime;
 
-  @Column()
-  uniq_id: string;
+  @Generated()
+  uniq_id: number;
 
   @Column()
   total: number;
@@ -75,14 +90,19 @@ export class Order {
   @Column({
     default: 'created',
     type: 'enum',
-    enum: ['created', 'paid', 'delivered', 'canceled'],
+    enum: EOrderStatus,
   })
-  status: 'created' | 'paid' | 'delivered' | 'canceled';
+  status: EOrderStatus;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt: Date;
+  created_at: Date;
+
+  @Column({
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
 
   @ManyToOne(() => Account, (account) => account.orders)
   account: Account;

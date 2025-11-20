@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -13,6 +14,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { ShopGuard } from '../auth/guards/shop.guard';
+import { GetProductQueryDto } from './dto/get-products.dto';
 
 @Controller('product')
 export class ProductController {
@@ -23,6 +25,11 @@ export class ProductController {
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
     return await this.productService.create(createProductDto);
+  }
+
+  @Get()
+  async search(@Query() query: GetProductQueryDto) {
+    return await this.productService.search(query);
   }
 
   @Get(':id')

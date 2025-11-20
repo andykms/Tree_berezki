@@ -30,7 +30,7 @@ export class OrderProduct {
   @Column({
     length: 1024,
   })
-  imageUrl: string;
+  imageUrl: string | null;
 
   @ManyToOne(() => Order, (order) => order.products)
   order: Order;

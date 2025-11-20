@@ -8,6 +8,12 @@ import { Repository } from 'typeorm';
 import { ProductParam } from './entities/product-param.entity';
 import { Param } from './entities/param.entity';
 import { RequiredParam } from '../category/entities/required-param.entity';
+import { GetProductQueryDto } from './dto/get-products.dto';
+
+export enum TSorts {
+  'ASC',
+  'DESC',
+}
 
 @Injectable()
 export class ProductService {
@@ -179,5 +185,78 @@ export class ProductService {
 
   async remove(id: string) {
     return await this.productRepository.delete(id);
+  }
+
+  async search(query: GetProductQueryDto) {
+    const queryBuilder = this.productRepository.createQueryBuilder('product');
+    if (query.category) {
+      queryBuilder.andWhere('product.category.path = :category', {
+        category: query.category,
+      });
+    }
+    const packedParams: { [key: string]: string[] } = {};
+
+    if (query.param) {
+      const peerParams = query.param.split(',');
+      for (const peerParam of peerParams) {
+        const peer = peerParam.split(':');
+        const param = peer[0];
+        const value = peer[1];
+        packedParams[param] = packedParams[param] || [];
+        packedParams[param].push(value);
+      }
+
+      const params = Object.keys(packedParams);
+      for (const param of params) {
+        queryBuilder.andWhere(
+          'product.params.param.name = :param AND product.params.value IN (:values)',
+          {
+            param,
+            values: packedParams[param],
+          },
+        );
+      }
+    }
+    if (query.minprice) {
+      queryBuilder.andWhere('product.price_rubles >= :minprice', {
+        minprice: query.minprice,
+      });
+    }
+    if (query.maxprice) {
+      queryBuilder.andWhere('product.price_rubles <= :maxprice', {
+        maxprice: query.maxprice,
+      });
+    }
+    if (query.shop) {
+      const shops = query.shop.split(',');
+      queryBuilder.andWhere('product.showcaseProducts.shop.name IN (:shops)', {
+        shops,
+      });
+    }
+
+    if (query.sortBy) {
+      switch (query.sortBy) {
+        case 'minprice':
+          queryBuilder.orderBy('product.price_rubles', 'ASC');
+          break;
+        case 'maxprice':
+          queryBuilder.orderBy('product.price_rubles', 'DESC');
+          break;
+        case 'popular':
+          queryBuilder.orderBy('product.purchase_count', 'DESC');
+          break;
+        case 'new':
+          queryBuilder.orderBy('product.created_at', 'DESC');
+          break;
+      }
+    }
+    queryBuilder
+      .skip((Number(query.page) - 1) * Number(query.limit))
+      .take(Number(query.limit));
+    const products = await queryBuilder.getMany();
+    return {
+      items: products,
+      total: products.length,
+    };
   }
 }

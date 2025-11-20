@@ -29,9 +29,8 @@ export class Product {
   price_rubles: number;
 
   @Column({
-    type: 'decimal',
-    precision: 5,
-    scale: 2,
+    type: 'integer',
+    default: 0,
   })
   discount: number;
 
@@ -55,6 +54,17 @@ export class Product {
     default: 'saled',
   })
   status: 'saled' | 'blocked' | 'deleted';
+
+  @Column({
+    default: 0,
+  })
+  purchase_count: number;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'now()',
+  })
+  created_at: Date;
 
   @OneToMany(() => ProductParam, (productParam) => productParam.product)
   params: ProductParam[];
