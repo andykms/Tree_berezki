@@ -1,94 +1,81 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { Category } from '../category/entities/category.entity';
 import { ShowcaseProducts } from '../shop/entities/showcase-products.entity';
-import { Repository } from 'typeorm';
 import { ProductParam } from './entities/product-param.entity';
 import { Param } from './entities/param.entity';
 import { RequiredParam } from '../category/entities/required-param.entity';
 import { GetProductQueryDto } from './dto/get-products.dto';
+import { IGetProductResponse } from './dto/get-product-response.dto';
+import { GetProductsResponseDto } from './dto/get-products-response.dto';
+import { CreateProductParamDto } from './dto/create-product.dto';
+import { SelectQueryBuilder } from 'typeorm/browser';
+import { GetShowcaseProductResponseDto } from './dto/get-showcase-repsponse.dto';
 
 export enum TSorts {
   'ASC',
   'DESC',
 }
 
+export type TParamWithValue = {
+  param: Param;
+  value: string;
+};
+
 @Injectable()
 export class ProductService {
   constructor(
+    @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(ShowcaseProducts)
     private readonly showcaseProductsRepository: Repository<ShowcaseProducts>,
+    @InjectRepository(ProductParam)
     private readonly productParamRepository: Repository<ProductParam>,
+    @InjectRepository(Param)
     private readonly paramRepository: Repository<Param>,
+    @InjectRepository(RequiredParam)
     private readonly requiredParamRepository: Repository<RequiredParam>,
   ) {}
 
-  async create(createProductDto: CreateProductDto): Promise<Product> {
+  async create(
+    createProductDto: CreateProductDto,
+  ): Promise<GetProductsResponseDto> {
     const showcaseId = createProductDto.showcaseId;
     const categoryId = createProductDto.categoryId;
 
-    // ищем категорию, что она действительно существует, а также чтобы создать продукт
-    const category = await this.categoryRepository.findOne({
-      where: { id: categoryId },
-    });
-
     // ищем группу товаров, что она действительно существует, а также чтобы создать продукт
-    const showcaseProducts = await this.showcaseProductsRepository.findOne({
-      where: { id: showcaseId },
-    });
-
-    //если у продукта нет категории, то выбрасываем ошибку
-    if (!category) {
-      throw new BadRequestException('категория не найдена');
-    }
-
-    //если у продукта нет группы товаров, то выбрасываем ошибку
-    if (!showcaseProducts) {
-      throw new BadRequestException('группа товаров не найдена');
-    }
+    const showcaseProducts =
+      await this.showcaseProductsRepository.findOneOrFail({
+        where: { id: showcaseId },
+      });
 
     //ищем все обязательные параметры категории
     const requiredParams = await this.requiredParamRepository.find({
-      where: { category },
+      where: {
+        category: {
+          id: categoryId,
+        },
+      },
     });
 
-    /*создаем объект с ключами названиями обязательных параметров и значениями false, 
-    
-    это нужно, чтобы при переборе указанных в запросе параметров, если указанный
-    параметр это обязательный параметр категории, то чтобы
-    каждый раз не проходиться по массиву обязательных параметров за O(n), сделать это 
-    за O(1) из-за использования хеш-таблицы. 
-    Если хотя бы один обязательный параметр в категории не указан, то выбрасываем ошибку*/
-    const requiredParamNames: { [key: string]: boolean } = {};
-    requiredParams.forEach((param) => {
-      requiredParamNames[param.name] = false;
-    });
-
-    const productParams: { param: Param; value: string }[] = [];
-
-    for (const param of createProductDto.params) {
-      const paramEntity = await this.paramRepository.findOne({
-        where: { id: param.paramId },
-      });
-      if (!paramEntity) {
-        throw new BadRequestException('параметр не найден');
-      }
-      requiredParamNames[paramEntity.name] = true;
-      productParams.push({ param: paramEntity, value: param.value });
-    }
-
-    if (Object.values(requiredParamNames).some((value) => !value)) {
-      throw new BadRequestException(
-        'не все обязательные параметры категории указаны',
-      );
-    }
+    //Проверяем, что обязательные параметры заполнены
+    const productParams: TParamWithValue[] = await this.__isFullRequiredParams(
+      createProductDto,
+      requiredParams,
+    );
 
     const newProduct = await this.productRepository.create({
       ...createProductDto,
-      category,
+      category: requiredParams[0].category[0],
       showcaseProducts,
     });
 
@@ -102,137 +89,74 @@ export class ProductService {
       await this.productParamRepository.save(productParam);
     }
 
-    return await this.productRepository.save(newProduct);
+    const saved = await this.productRepository.save(newProduct);
+    return this.__formatOneProductResponse(saved);
   }
 
-  findOne(id: string) {
-    return this.productRepository.findOne({ where: { id } });
+  async findOne(id: string): Promise<GetProductsResponseDto> {
+    const product = await this.productRepository.findOneOrFail({
+      where: { id },
+    });
+    return this.__formatResponse([this.__productResponseAdapting(product)]);
   }
 
   async update(
     id: string,
     updateProductDto: UpdateProductDto,
-  ): Promise<Product | null> {
-    const product = await this.productRepository.findOne({ where: { id } });
-    if (!product) {
-      throw new BadRequestException('товар не найден');
-    }
+  ): Promise<GetProductsResponseDto> {
+    const product = await this.productRepository.findOneOrFail({
+      where: { id },
+    });
 
-    let newCategory: Category | undefined = undefined;
-    let newShowcaseProducts: ShowcaseProducts | undefined = undefined;
-    let newParams: { param: Param; value: string }[] = [];
+    let newCategory: Category | null = updateProductDto.categoryId
+      ? await this.categoryRepository.findOne({
+          where: { id: updateProductDto.categoryId },
+        })
+      : null;
 
-    if (updateProductDto.categoryId) {
-      const category = await this.categoryRepository.findOne({
-        where: { id: updateProductDto.categoryId },
-      });
-      if (!category) {
-        throw new BadRequestException('категория не найдена');
-      }
-      newCategory = category;
-    }
-    if (updateProductDto.showcaseId) {
-      const showcaseProducts = await this.showcaseProductsRepository.findOne({
-        where: { id: updateProductDto.showcaseId },
-      });
-      if (!showcaseProducts) {
-        throw new BadRequestException('группа товаров не найдена');
-      }
-      newShowcaseProducts = showcaseProducts;
-    }
-    if (updateProductDto.params) {
-      for (const param of updateProductDto.params) {
-        const paramEntity = await this.paramRepository.findOne({
-          where: { id: param.paramId },
-        });
-        if (!paramEntity) {
-          throw new BadRequestException('параметр не найден');
-        }
-        newParams.push({ param: paramEntity, value: param.value });
-      }
+    let newShowcaseProducts: ShowcaseProducts | null =
+      updateProductDto.showcaseId
+        ? await this.showcaseProductsRepository.findOne({
+            where: { id: updateProductDto.showcaseId },
+          })
+        : null;
 
-      for (const newParam of newParams) {
-        const oldParam = await this.productParamRepository.find({
-          where: { param: newParam.param, product },
-        });
-        if (oldParam.length > 0) {
-          await this.productParamRepository.update(oldParam[0].id, {
-            value: newParam.value,
-          });
-        } else {
-          const productParam = await this.productParamRepository.create({
-            value: newParam.value,
-            param: newParam.param,
-            product,
-          });
-          await this.productParamRepository.save(productParam);
-        }
-      }
-    }
+    if (updateProductDto.params)
+      await this.__patchProductParams(updateProductDto.params, product);
+    if (newCategory) product.category = newCategory;
+    if (newShowcaseProducts) product.showcaseProducts = newShowcaseProducts;
 
-    await this.productRepository.update(id, updateProductDto);
-    if (newCategory) {
-      await this.productRepository.update(id, { category: newCategory });
-    }
-    if (newShowcaseProducts) {
-      await this.productRepository.update(id, {
-        showcaseProducts: newShowcaseProducts,
-      });
-    }
-    const newProduct = await this.productRepository.findOne({ where: { id } });
-    return newProduct;
+
+    await this.productRepository.save(product);
+
+    return this.__formatOneProductResponse(product);
   }
 
   async remove(id: string) {
-    return await this.productRepository.delete(id);
+    await this.productRepository.delete(id);
+    return {
+      message: 'ok',
+    };
   }
 
-  async search(query: GetProductQueryDto) {
-    const queryBuilder = this.productRepository.createQueryBuilder('product');
-    if (query.category) {
+  async search(query: GetProductQueryDto): Promise<GetProductsResponseDto> {
+    let queryBuilder = this.productRepository.createQueryBuilder('product');
+    query.category &&
       queryBuilder.andWhere('product.category.path = :category', {
         category: query.category,
       });
-    }
-    const packedParams: { [key: string]: string[] } = {};
 
-    if (query.param) {
-      const peerParams = query.param.split(',');
-      for (const peerParam of peerParams) {
-        const peer = peerParam.split(':');
-        const param = peer[0];
-        const value = peer[1];
-        packedParams[param] = packedParams[param] || [];
-        packedParams[param].push(value);
-      }
+    query.param && this.__addParamsToQueryBuilder(query.param, queryBuilder);
 
-      const params = Object.keys(packedParams);
-      for (const param of params) {
-        queryBuilder.andWhere(
-          'product.params.param.name = :param AND product.params.value IN (:values)',
-          {
-            param,
-            values: packedParams[param],
-          },
-        );
-      }
-    }
-    if (query.minprice) {
+    query.minprice &&
       queryBuilder.andWhere('product.price_rubles >= :minprice', {
         minprice: query.minprice,
       });
-    }
-    if (query.maxprice) {
+    query.maxprice &&
       queryBuilder.andWhere('product.price_rubles <= :maxprice', {
         maxprice: query.maxprice,
       });
-    }
-    if (query.shop) {
-      const shops = query.shop.split(',');
-      queryBuilder.andWhere('product.showcaseProducts.shop.name IN (:shops)', {
-        shops,
-      });
-    }
+    query.shop && this.__addShopsToQueryBuilder(query.shop, queryBuilder);
 
     if (query.sortBy) {
       switch (query.sortBy) {
@@ -254,9 +178,152 @@ export class ProductService {
       .skip((Number(query.page) - 1) * Number(query.limit))
       .take(Number(query.limit));
     const products = await queryBuilder.getMany();
+
+    return this.__formatManyProductsResponse(products);
+  }
+
+  async findShowcase(id: string): Promise<GetShowcaseProductResponseDto> {
+    const showcase = await this.showcaseProductsRepository.findOneOrFail({
+      where: { id },
+    });
     return {
-      items: products,
-      total: products.length,
+      ...showcase,
+      products: this.__formatManyProductsResponse(showcase.products),
     };
+  }
+
+  private __productResponseAdapting(product: Product): IGetProductResponse {
+    return {
+      ...product,
+      comments_count: product.comments.length,
+      question_count: product.questions.length,
+      shop_name: product.showcaseProducts.shop.name,
+      showcaseProductsId: product.showcaseProducts.id,
+      params: product.params.map((param) => ({
+        id: param.id,
+        value: param.value,
+        measure: param.param.measure.value,
+        name: param.param.name,
+        is_choosen: param.param.is_choosen,
+      })),
+      category: product.category.path,
+    };
+  }
+
+  private __formatResponse(items: IGetProductResponse[]) {
+    return {
+      items,
+      total: items.length,
+    };
+  }
+
+  private async __isFullRequiredParams(
+    createProductDto: CreateProductDto,
+    requiredParams: RequiredParam[],
+  ): Promise<TParamWithValue[]> {
+    const requiredParamNames: { [key: string]: boolean } = {};
+    requiredParams.forEach((param) => {
+      requiredParamNames[param.name] = false;
+    });
+
+    const productParams: { param: Param; value: string }[] = [];
+
+    for (const param of createProductDto.params) {
+      const paramEntity = await this.paramRepository.findOneOrFail({
+        where: { id: param.paramId },
+      });
+      requiredParamNames[paramEntity.name] = true;
+      productParams.push({ param: paramEntity, value: param.value });
+    }
+
+    if (Object.values(requiredParamNames).some((value) => !value)) {
+      throw new BadRequestException(
+        'не все обязательные параметры категории указаны',
+      );
+    }
+
+    return productParams;
+  }
+
+  private __formatOneProductResponse(product: Product): GetProductsResponseDto {
+    return this.__formatResponse([this.__productResponseAdapting(product)]);
+  }
+
+  private __formatManyProductsResponse(
+    products: Product[],
+  ): GetProductsResponseDto {
+    return this.__formatResponse(
+      products.map((product) => this.__productResponseAdapting(product)),
+    );
+  }
+
+  private async __patchProductParams(
+    params: CreateProductParamDto[],
+    product: Product,
+  ): Promise<void> {
+    const newParams: TParamWithValue[] = [];
+    for (const param of params) {
+      const paramEntity = await this.paramRepository.findOneOrFail({
+        where: { id: param.paramId },
+      });
+      newParams.push({ param: paramEntity, value: param.value });
+    }
+
+    for (const newParam of newParams) {
+      const oldParam = await this.productParamRepository.find({
+        where: { param: newParam.param, product },
+      });
+      if (oldParam.length > 0) {
+        await this.productParamRepository.update(oldParam[0].id, {
+          value: newParam.value,
+        });
+      } else {
+        const productParam = await this.productParamRepository.create({
+          value: newParam.value,
+          param: newParam.param,
+          product,
+        });
+        await this.productParamRepository.save(productParam);
+      }
+    }
+  }
+
+  private __addParamsToQueryBuilder(
+    queryParams: string,
+    queryBuilder: SelectQueryBuilder<Product>,
+  ): SelectQueryBuilder<Product> {
+    const packedParams: { [key: string]: string[] } = {};
+
+    const peerParams = queryParams.split(',');
+    for (const peerParam of peerParams) {
+      const peer = peerParam.split(':');
+      const param = peer[0];
+      const value = peer[1];
+      packedParams[param] = packedParams[param] || [];
+      packedParams[param].push(value);
+    }
+
+    const params = Object.keys(packedParams);
+    for (const param of params) {
+      queryBuilder.andWhere(
+        'product.params.param.name = :param AND product.params.value IN (:values)',
+        {
+          param,
+          values: packedParams[param],
+        },
+      );
+    }
+    return queryBuilder;
+  }
+
+  private __addShopsToQueryBuilder(
+    queryShops: string,
+    queryBuilder: SelectQueryBuilder<Product>,
+  ): SelectQueryBuilder<Product> {
+    const shops = queryShops.split(',');
+    queryBuilder.andWhere('product.showcaseProducts.shop.name IN (:shops)', {
+      shops,
+    });
+    return queryBuilder;
   }
 }

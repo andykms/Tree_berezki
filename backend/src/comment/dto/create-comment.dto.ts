@@ -7,6 +7,7 @@ import {
   Max,
   Min,
   IsEnum,
+  IsArray,
 } from 'class-validator';
 import { EHidden } from '../entities/comment.entity';
 
@@ -52,4 +53,14 @@ export class CreateCommentDto {
   @MaxLength(32)
   @MinLength(1)
   accountId: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  @MaxLength(32)
+  images: CreateCommentImageDto[];
+}
+
+export class CreateCommentImageDto {
+  original_name: string;
+  path: string;
 }

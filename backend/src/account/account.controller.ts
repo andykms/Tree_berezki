@@ -6,37 +6,40 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { AccountGuard } from '../auth/guards/account.guard';
 
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
+  @UseGuards(JwtGuard)
   @Post()
-  create(@Body() createAccountDto: CreateAccountDto) {
-    return this.accountService.create(createAccountDto);
+  async create(@Body() createAccountDto: CreateAccountDto, @Req() req) {
+    return await this.accountService.create(createAccountDto, req.user);
   }
 
-  @Get()
-  findAll() {
-    return this.accountService.findAll();
-  }
-
+  @UseGuards(JwtGuard, AccountGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.accountService.findOne(id);
   }
 
+  @UseGuards(JwtGuard, AccountGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountService.update(+id, updateAccountDto);
+  async update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
+    return await this.accountService.update(id, updateAccountDto);
   }
 
+  @UseGuards(JwtGuard, AccountGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accountService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.accountService.remove(id);
   }
 }

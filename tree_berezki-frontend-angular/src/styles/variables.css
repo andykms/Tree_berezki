@@ -1,0 +1,21 @@
+:root {
+  --font: "PT Sans", sans-serif;
+  --back: #1C274C;
+  --primary-back: #233D64;
+  --secondary-back: #20335A;
+  --text: #fff;
+  --on-light-text: #1a1a1a;
+  --sub-text: #8E93A6;
+  --block-text: rgb(0, 0, 0, 0.5);
+  --primary: #00FF00;
+  --primary-hover: #5cff5c;
+  --primary-low: #abffab;
+  --secondary: #283242;
+  --tertiary: rgb(0, 0, 0, 0.5);
+  --tertiary-hover: rgb(0, 0, 0, 0.7);
+  --danger-text: #FF0000;
+  --star: #FFD700;
+  --standart-radius: 15px;
+  --standart-padding: 20px;
+  --secondary-padding: 15px;
+}

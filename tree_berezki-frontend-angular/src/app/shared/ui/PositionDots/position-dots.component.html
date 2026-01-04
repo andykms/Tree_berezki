@@ -1,0 +1,20 @@
+<div class="dots-container">
+  <div 
+    class="dot-wrapper"
+  >
+  @for(i of [].constructor(maxVisible); track $index) {
+    <button 
+      class="dot"
+      [class.active]="$index === active"
+      [class.inactive]="$index !== active"
+      (click)="selectDot($index)"
+      [attr.aria-label]="'Перейти к слайду ' + ($index + 1)"
+      [attr.aria-current]="$index === active"
+      [class.visible]="isDotVisible($index)"
+      [class.hidden]="!isDotVisible($index)"
+    >
+      <span class="sr-only">Slide {{ $index + 1 }}</span>
+    </button>
+  }
+  </div>
+</div>

@@ -1,0 +1,71 @@
+.text {
+  font-family: var(--font);
+}
+
+.main:not(.light){
+  color: var(--text)
+}
+
+.sub {
+  color: var(--sub-text)
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.crossed-out {
+  text-decoration: line-through;
+  color: var(--on-light-text);
+}
+
+.large_24 {
+  font-size: 24px;
+}
+
+.large_20 {
+  font-size: 20px;
+}
+
+.medium_16 {
+  font-size: 16px;
+}
+
+.medium_14 {
+  font-size: 14px;
+}
+
+.small_12 {
+  font-size: 12px;
+}
+
+.small_10 {
+  font-size: 10px;
+}
+
+.light .main {
+  color: var(--on-light-text);
+}
+
+.light .sub {
+  color: var(--sub-text);
+}
+
+.light .crossed-out {
+  color: var(--on-light-text);
+}
+
+.dark .main {
+  color: var(--text);
+}
+
+.dark .sub {
+  color: var(--sub-text);
+}
+
+.dark .crossed-out {
+  color: var(--on-light-text);
+}
+
+
+

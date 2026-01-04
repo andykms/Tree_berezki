@@ -5,9 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ISessionInfo, User } from '../user/entities/user.entity';
 import { RefreshTokenService } from './refresh-token/refresh-token.service';
 import { ConfigService } from '@nestjs/config';
-import { type IConfig } from '../config/app.config';
+import { type IJwtConfig } from '../config/jwt.config';
 import { Response } from 'express';
-import { ShopService } from '../shop/shop.service';
 
 @Injectable()
 export class AuthService {
@@ -15,14 +14,20 @@ export class AuthService {
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
     private readonly refreshService: RefreshTokenService,
-    private readonly configService: ConfigService<IConfig>,
-    private readonly shopService: ShopService,
+    private readonly configService: ConfigService,
   ) {}
 
   async auth(user: User, res: Response, ipAddress: string, userAgent: string) {
     const payload = { sub: user.id };
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.refreshService.sign(payload);
+    //console.log("PAYLOAD", payload);
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_CONFIG').accessTokenSecret,
+      expiresIn: this.configService.get('JWT_CONFIG').accessTokenExpiresIn,
+    });
+    //console.log("ACCESS_TOKEN", accessToken);
+    const refreshToken = await this.refreshService.sign(payload);
+
+    //console.log("REFRESH_TOKEN", refreshToken);
 
     const sessionInfo = {
       refreshToken,
@@ -31,11 +36,15 @@ export class AuthService {
       createdAt: new Date(),
     };
 
+    //console.log("SESSION_INFO", sessionInfo);
+
     await this.usersService.update(user.id, {
       sessions: [...user.sessions, sessionInfo],
     });
 
-    res.cookie('refreshToken', {
+    //console.log("UPDATED");
+
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -54,13 +63,14 @@ export class AuthService {
   ): Promise<User | null> {
     const user = await this.usersService.findByPhone(phone);
     if (!user) {
+      console.log("ПОЛЬЗОВАТЕЛЬ НЕ НАЙДЕН ПО ТЕЛЕФОНУ")
       return null;
     }
-    const hash = await bcrypt.hash(user.password);
-    const matched = await bcrypt.compare(password, hash);
+    const matched = await bcrypt.compare(password, user.password);
     if (matched) {
       return user;
     }
+    console.log("ПАРОЛИ НЕ СОВПАЛИ")
     return null;
   }
 

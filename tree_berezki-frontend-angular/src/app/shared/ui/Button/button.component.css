@@ -1,0 +1,29 @@
+.button {
+  padding: 1px;
+  border-radius: var(--standart-radius);
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.primary {
+  background-color: var(--primary);
+}
+
+.primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.secondary {
+  background-color: var(--secondary);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.tertiary {
+  background-color: var(--tertiary);
+}
+
+.tertiary:hover {
+  background-color: var(--tertiary-hover);
+}

@@ -1,0 +1,44 @@
+.img__container {
+  border-radius: var(--standart-radius);
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.loading {
+  overflow: hidden;
+  position: relative;
+  background-color: var(--primary-back);
+}
+
+.loading_spin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 200%;
+  background-color: var(--secondary-back);
+  box-shadow: 25px 0 15px var(--secondary-back), -25px 0 15px var(--secondary-back);
+  animation: spin 1.5s linear infinite;
+  rotate: 60deg;
+}
+
+@keyframes spin {
+  0% {
+    transform: translateX(-300%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.error {
+  background-color: var(--primary-back);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

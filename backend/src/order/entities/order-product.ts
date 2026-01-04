@@ -20,7 +20,9 @@ export class OrderProduct {
   count: number;
 
   @Column({
-    type: 'int64',
+    type: 'decimal',
+    precision: 10,
+    scale: 0,
   })
   article: number;
 
@@ -30,7 +32,7 @@ export class OrderProduct {
   @Column({
     length: 1024,
   })
-  imageUrl: string | null;
+  imageUrl: string;
 
   @ManyToOne(() => Order, (order) => order.products)
   order: Order;

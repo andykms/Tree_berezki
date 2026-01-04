@@ -12,4 +12,7 @@ export class Basket {
 
   @ManyToOne(() => Product, (product) => product.baskets)
   product: Product;
+
+  @Column()
+  quantity: number;
 }

@@ -1,27 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { IConfig } from '../../config/app.config';
+import { IJwtConfig } from '../../config/jwt.config';
 
 @Injectable()
 export class RefreshTokenService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService<IConfig>,
+    private readonly configService: ConfigService,
   ) {}
 
-  sign(payload: any) {
-    return this.jwtService.sign(payload, {
-      secret: this.configService.get('refreshTokenSecret', { infer: true }),
-      expiresIn: this.configService.get('refreshTokenExpiresIn', {
-        infer: true,
-      }),
+  async sign(payload: any) {
+    return await this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_CONFIG').refreshTokenSecret,
+      expiresIn: this.configService.get('JWT_CONFIG').refreshTokenExpiresIn,
     });
   }
 
-  verify(token: string): any {
-    return this.jwtService.verify(token, {
-      secret: this.configService.get('refreshTokenSecret', { infer: true }),
+  async verify(token: string) {
+    return await this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_CONFIG').refreshTokenSecret,
     });
   }
 }

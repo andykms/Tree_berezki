@@ -1,0 +1,75 @@
+<div class="main-card__container">
+  <div class="main-card__like-container">
+    <button-like-ui [isLiked]="isLiked" type="small" (onClick)="toggleLike()"></button-like-ui>
+  </div>
+  <div class="main-card__image-section">
+    <image-ui
+      [src]="currentImageSrc"
+      [alt]="currentImageAlt"
+      width="200px"
+      height="267px"
+    ></image-ui>
+    <div class="main-card__image-left">
+      <button-vertical-arrow-ui (onClick)="prevImage()" type="left"></button-vertical-arrow-ui>
+    </div>
+    <div class="main-card__image-right">
+      <button-vertical-arrow-ui (onClick)="nextImage()" type="right"></button-vertical-arrow-ui>
+    </div>
+    <position-dots-ui
+      [count]="countImages"
+      [active]="activeImage"
+      (activeChange)="(changeImage)"
+    ></position-dots-ui>
+    <div class="button-add-basket__container">
+      <button-add-basket-ui
+        [addedCount]="addedCount"
+        [isAdded]="isAdded"
+        (onClick)="clickAdd()"
+      ></button-add-basket-ui>
+    </div>
+  </div>
+  <div class="main-card__about">
+    <div class="main-card__price">
+      <text-ui type="main" size="large_20" [bold]="true" background="dark">{{
+        price | currency : 'RUB' : 'symbol-narrow'
+      }}</text-ui>
+      <text-ui type="crossed-out" size="medium_16" background="dark" [bold]="true">{{
+        oldPrice | number : '1.1-2'
+      }}</text-ui>
+    </div>
+    <div class="main-card__product-info">
+      <text-ui type="main" size="medium_14" background="dark">{{ shop }}</text-ui>
+      <text-ui type="main" size="medium_16" background="dark">{{ title }}</text-ui>
+    </div>
+    <div class="main-card__ratings-info">
+      <div class="main-card__rating">
+        <svg
+          viewBox="0 0 14 14"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="14.000000"
+          height="14.000000"
+          fill="none"
+        >
+          <rect
+            id="star-svgrepo-com (4) 24"
+            width="14.000000"
+            height="14.000000"
+            x="0.000000"
+            y="0.000000"
+          />
+          <path
+            id="Форма 59"
+            d="M13.9766 5.31059C13.9245 5.15506 13.7898 5.04175 13.6277 5.01681L9.324 4.35925L7.39572 0.251563C7.32353 0.098 7.16909 0 6.99956 0C6.83003 0 6.67581 0.098 6.6034 0.251563L4.67512 4.35925L0.371435 5.01703C0.209341 5.04175 0.0748099 5.15528 0.0225287 5.31081C-0.0295338 5.46613 0.00962243 5.63763 0.124247 5.75509L3.25106 8.96131L2.51212 13.4903C2.485 13.6557 2.55478 13.8222 2.69193 13.9184C2.76718 13.9716 2.85534 13.9985 2.94372 13.9985C3.01634 13.9985 3.0894 13.9801 3.15547 13.9438L6.99934 11.8178L10.8432 13.9438C10.9093 13.9801 10.9823 13.9985 11.055 13.9985C11.1433 13.9985 11.2317 13.9716 11.3067 13.9184C11.4439 13.8222 11.5137 13.6557 11.4866 13.4903L10.7476 8.96131L13.8744 5.7551C13.9893 5.63741 14.0287 5.46591 13.9766 5.31059Z"
+            fill="var(--text)"
+            fill-rule="nonzero"
+          />
+        </svg>
+        <text-ui type="main" size="medium_14" background="dark">{{
+          rating | number : '1.1-2'
+        }}</text-ui>
+      </div>
+      <text-ui type="sub" size="medium_14" background="dark">{{ countRating }} оценили</text-ui>
+    </div>
+  </div>
+</div>

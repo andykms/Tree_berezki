@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../../user/user.service';
+import { IJwtConfig } from '../../config/jwt.config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -10,7 +11,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     private configService: ConfigService,
     private usersService: UserService,
   ) {
-    const secret = configService.get<string>('secretToken');
+
+    const jwtConfig = configService.get('JWT_CONFIG');
+
+    if (!jwtConfig) {
+      throw new Error('JWT configuration is not defined');
+    }
+
+    const secret = jwtConfig.accessTokenSecret;
     if (!secret) {
       throw new Error('secretToken is not defined in configuration');
     }
@@ -22,7 +30,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(jwtPayload: { sub: string }) {
-    const user = this.usersService.findOne(jwtPayload.sub);
+    console.log(jwtPayload);
+    const user = await this.usersService.findOne(jwtPayload.sub);
 
     if (!user) {
       throw new UnauthorizedException();

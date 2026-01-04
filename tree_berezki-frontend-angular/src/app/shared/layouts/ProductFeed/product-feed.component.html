@@ -1,0 +1,18 @@
+<cdk-virtual-scroll-viewport class="virtual-scroll" itemSize="8">
+  <div *cdkVirtualFor="let product of products">
+    <main-card-ui
+      [title]="product.title"
+      [shop]="product.shop"
+      [images]="product.images"
+      [rating]="product.rating"
+      [price]="product.price"
+      [discount]="product.discount"
+      [countRating]="product.countRating"
+      [addedCount]="product.addedCount"
+      [isLiked]="product.isLiked"
+      (onLike)="onClickLike(product)"
+      (onAdd)="onClickAdd(product)"
+      (onClick)="onClickProduct(product)"
+    ></main-card-ui>
+  </div>
+</cdk-virtual-scroll-viewport>

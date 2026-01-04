@@ -30,8 +30,8 @@ export class OrderController {
 
   @UseGuards(JwtGuard)
   @Get()
-  async findAll(@Query() query: GetOrdersQueryDto) {
-    return await this.orderService.findAll(query);
+  async findAll(@Query() query: GetOrdersQueryDto, @Req() req) {
+    return await this.orderService.findAll(query, req.user);
   }
 
   @UseGuards(JwtGuard)

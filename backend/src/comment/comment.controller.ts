@@ -18,6 +18,9 @@ import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AccountGuard } from '../auth/guards/account.guard';
 import { GetCommentsQueryDto } from './dto/get-comments-query.dto';
 import { LikeCommentDto } from './dto/like-comment.dto';
+import { CreateReplyDto } from './dto/create-reply.dto';
+import { GetRepliesQueryDto } from './dto/get-replies.dto';
+import { LikeReplyDto } from './dto/like-reply.dto';
 
 @Controller('comment')
 export class CommentController {
@@ -53,8 +56,8 @@ export class CommentController {
   @UseGuards(JwtGuard)
   @UseGuards(AccountGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.commentService.remove(id);
+  async remove(@Param('id') id: string, @Req() req) {
+    return await this.commentService.remove(id, req.user);
   }
 
   @UseGuards(JwtGuard)
@@ -99,5 +102,44 @@ export class CommentController {
     @Req() req,
   ) {
     return await this.commentService.undislike(id, likeDto, req.user);
+  }
+
+  @UseGuards(JwtGuard)
+  @Post(':id/reply')
+  async reply(@Param('id') id: string, @Body() replyDto: CreateReplyDto, @Req() req) {
+    return await this.commentService.reply(id, replyDto, req.user);
+  }
+
+  @Get(':id/reply')
+  async getReplies(@Param('id') id: string, @Query() query: GetRepliesQueryDto) {
+    return await this.commentService.getReplies(id, query);
+  }
+
+  @UseGuards(JwtGuard)
+  @UseGuards(AccountGuard)
+  @Put('reply/:id/likes')
+  async likeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+    return await this.commentService.likeReply(id, likeDto, req.user);
+  }
+
+  @UseGuards(JwtGuard)
+  @UseGuards(AccountGuard)
+  @Delete('reply/:id/likes')
+  async unlikeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+    return await this.commentService.unlikeReply(id, likeDto, req.user);
+  }
+
+  @UseGuards(JwtGuard)
+  @UseGuards(AccountGuard)
+  @Put('reply/:id/dislikes')
+  async dislikeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+    return await this.commentService.dislikeReply(id, likeDto, req.user);
+  }
+
+  @UseGuards(JwtGuard)
+  @UseGuards(AccountGuard)
+  @Delete('reply/:id/dislikes')
+  async undislikeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+    return await this.commentService.undislikeReply(id, likeDto, req.user);
   }
 }

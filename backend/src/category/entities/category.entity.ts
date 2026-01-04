@@ -1,4 +1,4 @@
-import { ManyToOne, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany } from 'typeorm';
 import { RequiredParam } from './required-param.entity';
 import { Product } from '../../product/entities/product.entity';
 
@@ -10,9 +10,9 @@ export class Category {
   @Column()
   path: string;
 
-  @ManyToOne(() => RequiredParam, (requiredParam) => requiredParam.category)
-  requiredParams: RequiredParam;
+  @ManyToMany(() => RequiredParam, (requiredParam) => requiredParam.category)
+  requiredParams: RequiredParam[];
 
-  @ManyToOne(() => Product, (product) => product.category)
+  @OneToMany(() => Product, (product) => product.category)
   products: Product[];
 }

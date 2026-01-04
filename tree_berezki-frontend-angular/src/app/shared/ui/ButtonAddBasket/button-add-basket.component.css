@@ -1,0 +1,14 @@
+.container {
+  block-size: 40px;
+  inline-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.isAdded {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: var(--primary-low);
+  border-radius: 3px;
+}

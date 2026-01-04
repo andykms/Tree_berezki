@@ -1,0 +1,11 @@
+.body {
+  border-radius: var(--standart-radius);
+}
+
+.primary {
+  background-color: var(--primary-back);
+}
+
+.secondary {
+  background-color: var(--secondary-back);
+}

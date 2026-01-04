@@ -29,7 +29,7 @@ export class RefreshGuard implements CanActivate {
     }
 
     try {
-      const payload = this.refreshTokenService.verify(token);
+      const payload = await this.refreshTokenService.verify(token);
 
       const user = await this.userService.findOne(payload.sub);
 

@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
 import { Account } from '../../account/entities/account.entity';
-import { Reply } from '../../reply/entities/reply.entity';
+import { Reply } from './reply.entity';
 import { CommentImage } from './comment-image.entity';
 import { CommentLike } from './comment-likes.entity';
 
@@ -52,6 +52,17 @@ export class Comment {
   @Column({
     default: 0,
   })
+  likes_count: number;
+
+  @Column({
+    default: 0,
+  })
+  dislikes_count: number;
+
+
+  @Column({
+    default: 0,
+  })
   replies_count: number;
 
   @Column({
@@ -61,15 +72,15 @@ export class Comment {
   })
   hidden: EHidden;
 
-  @OneToMany(() => Product, (product) => product.comments)
+  @ManyToOne(() => Product, (product) => product.comments)
   product: Product;
 
   @ManyToOne(() => Account, (account) => account.comments)
   account: Account;
 
-  @OneToMany(() => Reply, (reply) => reply.comment)
+  @OneToMany(() => Reply, (reply) => reply.comment, { onDelete: 'CASCADE' })
   replies: Reply[];
 
-  @OneToMany(() => CommentImage, (image) => image.comment)
+  @OneToMany(() => CommentImage, (image) => image.comment, { onDelete: 'CASCADE' })
   images: CommentImage[];
 }

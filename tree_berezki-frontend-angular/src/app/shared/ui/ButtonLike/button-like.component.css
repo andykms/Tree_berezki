@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.small {
+  block-size: 35px;
+  inline-size: 35px;
+}
+
+.large {
+  block-size: 50px;
+  inline-size: 50px;
+}

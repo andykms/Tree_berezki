@@ -12,6 +12,15 @@ import { Comment } from '../../comment/entities/comment.entity';
 import { ShowcaseProducts } from '../../shop/entities/showcase-products.entity';
 import { ProductImage } from './product-image.entity';
 import { Basket } from '../../basket/entities/basket.entity';
+import { Question } from '../../question/entities/question.entity';
+
+
+export enum EProductStatus {
+  SALED = "saled",
+  BLOCKED = "blocked",
+  DELETED = "deleted"
+}
+
 
 @Entity()
 export class Product {
@@ -50,10 +59,10 @@ export class Product {
 
   @Column({
     type: 'enum',
-    enum: ['saled', 'blocked', 'deleted'],
+    enum: EProductStatus,
     default: 'saled',
   })
-  status: 'saled' | 'blocked' | 'deleted';
+  status: EProductStatus;
 
   @Column({
     default: 0,
@@ -90,4 +99,7 @@ export class Product {
 
   @OneToMany(() => Basket, (basket) => basket.product, { onDelete: 'CASCADE' })
   baskets: Basket[];
+
+  @OneToMany(()=> Question, (question) => question.product, { onDelete: 'CASCADE' })
+  questions: Question[]
 }

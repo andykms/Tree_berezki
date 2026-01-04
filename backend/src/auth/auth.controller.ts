@@ -28,8 +28,12 @@ export class AuthController {
     @Ip() ip,
   ) {
     const user = await this.usersService.create(createAuthDto);
+    //console.log("USER", user);
     const userAgent = req.headers['user-agent'];
-    return await this.authService.auth(user, res, ip, userAgent);
+    //console.log("USER AGENT", userAgent);
+    //console.log("IP", ip);
+    const tokens = await this.authService.auth(user, res, ip, userAgent);
+    return res.json(tokens);
   }
 
   @UseGuards(LocalGuard)

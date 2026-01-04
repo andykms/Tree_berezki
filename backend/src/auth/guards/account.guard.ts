@@ -15,7 +15,7 @@ export class AccountGuard implements CanActivate {
       const request = context.switchToHttp().getRequest();
       const user = request.user as User;
       const accounts = user.accounts.map((account) => account.id);
-      if (accounts.includes(request.body.accountId)) {
+      if (accounts.includes(request.body.accountId) || accounts.includes(request.params.id)) {
         return true;
       }
       throw new UnauthorizedException('недостаточно прав');

@@ -4,11 +4,9 @@ import {
   MaxLength,
   MinLength,
   IsEnum,
-  Max,
   IsEmail,
 } from 'class-validator';
-
-const sexTypes = ['male', 'female', 'not specified'];
+import { sexTypes } from '../entities/account.entity';
 
 export class CreateAccountDto {
   @IsString()
@@ -19,9 +17,7 @@ export class CreateAccountDto {
 
   @IsEnum(sexTypes)
   @IsNotEmpty()
-  @MinLength(4)
-  @MaxLength(16)
-  sex: string;
+  sex: sexTypes;
 
   @IsString()
   @IsEmail()

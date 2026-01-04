@@ -17,4 +17,10 @@ export class GetOrdersQueryDto {
   @MaxLength(32)
   @MinLength(1)
   limit: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
+  @MaxLength(255)
+  @MinLength(1)
+  accountId: string;
 }

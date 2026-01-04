@@ -3,22 +3,26 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { OrderProduct } from './entities/order-product';
 import { Product } from '../product/entities/product.entity';
 import { User } from '../user/entities/user.entity';
 import { UpdateOrderByUserDto } from './dto/update-by-user-order.dto';
-import { EDeliveryTime, EOrderStatus } from './entities/order.entity';
+import { EOrderStatus } from './entities/order.entity';
 import { GetOrdersQueryDto } from './dto/get-orders.dto';
 
 @Injectable()
 export class OrderService {
   constructor(
+    @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    @InjectRepository(OrderProduct)
     private readonly orderProductRepository: Repository<OrderProduct>,
+    @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
 
@@ -61,22 +65,21 @@ export class OrderService {
         count: product.count,
         order,
         shopName: product.showcaseProducts.shop.name,
-        imageUrl: product.images[0].url || null,
+        imageUrl: product.images[0].url,
       });
       await this.orderProductRepository.save(newOrderProduct);
     }
 
-    await this.orderRepository.save(order);
-    return order;
+    return await this.orderRepository.save(order);
   }
 
-  async findAll(query: GetOrdersQueryDto) {
-    const orderBuilder = this.orderRepository.createQueryBuilder('order');
+  async findAll(query: GetOrdersQueryDto, user: User) {
     const limit = Number(query.limit) || 10;
     const page = Number(query.page) || 1;
-    orderBuilder.limit(limit).offset((page - 1) * limit);
-    orderBuilder.orderBy('order.createdAt', 'DESC');
-    const orders = await orderBuilder.getMany();
+
+    const account = user.accounts.find((account)=> account.id === query.accountId);
+
+    const orders = await this.orderRepository.find({where: {account}, take: limit, skip: page * limit, order: {created_at: 'DESC'}})
     return {
       items: orders,
       total: orders.length,

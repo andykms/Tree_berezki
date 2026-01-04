@@ -3,17 +3,19 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: Repository<User>) {}
+  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
   async create(createUserDto: CreateUserDto) {
     const user = await this.userRepository.create({
       ...createUserDto,
-      sessions: [],
+      sessions: []
     });
-    return user;
+    return await this.userRepository.save(user);
   }
 
   async findByPhone(phone: string) {
@@ -35,7 +37,7 @@ export class UserService {
     return user;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 }
