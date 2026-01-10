@@ -1,5 +1,7 @@
 import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnDestroy, signal } from "@angular/core";
 
+export type TImageType = "base" | "rounded";
+
 @Component({
   selector: "image-ui",
   templateUrl: "./image.component.html",
@@ -10,6 +12,8 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
   @Input() height: string = "auto";
   @Input() src: string = "";
   @Input() alt: string = "";
+  @Input() maxHeight: string = "";
+  @Input() type: TImageType = "rounded";
   
   @ViewChild("image", {static: false})
   imgRef!: ElementRef<HTMLImageElement>;
@@ -35,5 +39,12 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
   onImageError() {
     this.isLoading.set(false);
     this.isError.set(true);
+  }
+
+  get imageClasses() {
+    return {
+      "img__container": true,
+      [this.type]: true
+    }
   }
 }

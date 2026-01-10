@@ -1,0 +1,10 @@
+.button-basket-counter__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  border-radius: 100em;
+  background-color: var(--secondary);
+  block-size: 36px;
+  inline-size: 60px;
+}

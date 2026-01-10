@@ -1,0 +1,24 @@
+.button-add-basket-full__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  block-size: 60px;
+  inline-size: 200px;
+}
+
+.button-add-basket-full {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 250px;
+  block-size: 60px;
+  padding: 0 20px;
+}
+
+.button-add-basket-full__counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}

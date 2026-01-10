@@ -1,0 +1,115 @@
+.comment__container {
+  inline-size: 350px;
+  block-size: auto;
+  border-radius: var(--standart-radius);
+  display: grid;
+  gap: 10px;
+  grid-template-areas: 
+  "header"
+  "images"
+  "message"
+  "events"
+  "shop-reply";
+  inline-size: 100%;
+}
+
+.comment__images {
+  grid-area: images;
+  inline-size: 100%;
+  block-size: 400px;
+}
+
+.base {
+  background-color: var(--primary-back);
+}
+
+.empty {
+  background-color: transparent;
+}
+
+.comment__header {
+  grid-area: header;
+  padding: 10px 10px 0 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment__send-info {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment__sender {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.comment__sender-rating {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment__message {
+  grid-area: message;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.comment__events-info {
+  grid-area: events;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+  padding: 0 10px;
+}
+
+.comment__event {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.comment__event svg path {
+  transition: fill 0.15s ease-in-out;
+}
+
+.comment__shop-reply {
+  grid-area: shop-reply;
+  padding: 10px;
+  margin: 10px;
+  background-color: var(--tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-radius: var(--standart-radius);
+}
+
+@media (width > 768px) {
+  .comment__container {
+    grid-template-areas:
+    "header header header"
+    "message message images"
+    "message message images"
+    "events events events"
+    "shop-reply shop-reply shop-reply";
+  }
+
+  .comment__images {
+    block-size: 160px;
+    inline-size: 150px;
+    align-self: center;
+    justify-self: center;
+    padding: 20px;
+    border-radius: var(--standart-radius);
+  }
+}

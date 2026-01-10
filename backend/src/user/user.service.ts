@@ -19,7 +19,7 @@ export class UserService {
   }
 
   async findByPhone(phone: string) {
-    const user = await this.userRepository.findOne({ where: { phone } });
+    const user = await this.userRepository.findOne({ where: { phone }, select: ['password', 'accounts', 'shops'],});
     return user;
   }
 

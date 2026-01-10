@@ -1,0 +1,36 @@
+@if(isAdded) {
+  <div class="button-add-basket-full">
+    <button-ui type="empty" (onClick)="onClickRemove()">
+      <svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25.000000" height="25.000000" fill="none" customFrame="#000000">
+        <g id="Page-1">
+          <g id="Icon-Set">
+            <path id="minus-circle" d="M12.5 23.4375C6.45938 23.4375 1.5625 18.539 1.5625 12.5C1.5625 6.46095 6.45938 1.5625 12.5 1.5625C18.5406 1.5625 23.4375 6.46095 23.4375 12.5C23.4375 18.539 18.5406 23.4375 12.5 23.4375ZM12.5 0C5.59611 0 0 5.59378 0 12.5C0 19.4062 5.59611 25 12.5 25C19.4039 25 25 19.4062 25 12.5C25 5.59378 19.4039 0 12.5 0ZM17.1875 11.7188L7.8125 11.7188C7.38049 11.7188 7.03125 12.0703 7.03125 12.5C7.03125 12.9297 7.38049 13.2812 7.8125 13.2812L17.1875 13.2812C17.6195 13.2812 17.9688 12.9297 17.9688 12.5C17.9688 12.0703 17.6195 11.7188 17.1875 11.7188Z" fill="var(--on-light-text)" fill-rule="evenodd" />
+          </g>
+        </g>
+      </svg>
+    </button-ui>
+    <div class="button-add-basket-full__counter">
+      <text-ui type="main" size="large_24" back="light" [bold]="true">{{ addedCount }}</text-ui>
+      <text-ui type="main" size="medium_14" back="light" [bold]="true">в корзине</text-ui>
+    </div>
+    <button-ui type="empty" (onClick)="onClickAdd()">
+      <div width="25px" height="25px">
+        @if(!isDisabledAdd) {
+          <svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25.000000" height="25.000000" fill="none" customFrame="#000000">
+            <g id="Page-1">
+              <g id="Icon-Set">
+                <path id="plus-circle" d="M12.5 23.4375C6.45938 23.4375 1.5625 18.539 1.5625 12.5C1.5625 6.46095 6.45938 1.5625 12.5 1.5625C18.5406 1.5625 23.4375 6.46095 23.4375 12.5C23.4375 18.539 18.5406 23.4375 12.5 23.4375ZM12.5 0C5.59609 0 0 5.59378 0 12.5C0 19.4062 5.59609 25 12.5 25C19.4039 25 25 19.4062 25 12.5C25 5.59378 19.4039 0 12.5 0ZM17.1875 11.7188L13.2812 11.7188L13.2812 7.8125C13.2812 7.38277 12.932 7.03125 12.5 7.03125C12.068 7.03125 11.7188 7.38277 11.7188 7.8125L11.7188 11.7188L7.8125 11.7188C7.38046 11.7188 7.03125 12.0703 7.03125 12.5C7.03125 12.9297 7.38046 13.2812 7.8125 13.2812L11.7188 13.2812L11.7188 17.1875C11.7188 17.6172 12.068 17.9688 12.5 17.9688C12.932 17.9688 13.2812 17.6172 13.2812 17.1875L13.2812 13.2812L17.1875 13.2812C17.6195 13.2812 17.9688 12.9297 17.9688 12.5C17.9688 12.0703 17.6195 11.7188 17.1875 11.7188Z" fill="var(--on-light-text)" fill-rule="evenodd" />
+              </g>
+            </g>
+          </svg> 
+        }
+      </div>  
+    </button-ui>
+  </div>
+} @else {
+  <button-ui type="primary" (onClick)="onClickAdd()">
+    <div class="button-add-basket-full__empty">
+      <text-ui type="main" size="large_24" back="light" [bold]="true">В корзину</text-ui>
+    </div>
+  </button-ui>
+}

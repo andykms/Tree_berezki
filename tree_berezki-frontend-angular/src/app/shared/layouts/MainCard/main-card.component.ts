@@ -1,13 +1,15 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { CurrencyPipe, DecimalPipe } from "@angular/common";
 
-import { ImageComponent } from "../../ui/Image/image.component";
+import { CountFormatPipe } from "../../pipes/count-format.pipe";
+import { ImageCarouselComponent } from "../../ui/ImageCarousel/image-carousel.component";
 import { ButtonComponent } from "../../ui/Button/button.component";
 import { TextComponent } from "../../ui/Text/text.component";
-import { ButtonAddBasketComponent } from "../../ui/ButtonAddBasket/button-add-basket.component";
+import { ButtonAddBasketComponent } from "../../ui/ButtonAddBasketMobile/button-add-basket.component";
 import { PositionDotsComponent } from "../../ui/PositionDots/position-dots.component";
 import { ButtonLikeComponent } from "../../ui/ButtonLike/button-like.component";
 import { ButtonVerticalArrowComponent } from "../../ui/ButtonVerticalArrow/button-vertical-arrow.component";
+
 
 export type Image = {
   src: string;
@@ -16,7 +18,7 @@ export type Image = {
 
 @Component({
   imports: [
-    ImageComponent,
+    ImageCarouselComponent,
     ButtonComponent,
     TextComponent,
     ButtonAddBasketComponent,
@@ -24,9 +26,10 @@ export type Image = {
     ButtonLikeComponent,
     ButtonVerticalArrowComponent,
     CurrencyPipe,
-    DecimalPipe
+    DecimalPipe,
+    CountFormatPipe
   ],
-  selector: "main-card-ui",
+  selector: "main-card-layout",
   templateUrl: "./main-card.component.html",
   styleUrls: ["./main-card.component.css"]
 })
@@ -88,6 +91,10 @@ export class MainCardComponent {
 
   get oldPrice() {
     return this.price * (1 + this.discount / 100);
+  }
+
+  get countRatingText() {
+    return this.countRating.toString();
   }
 }
 

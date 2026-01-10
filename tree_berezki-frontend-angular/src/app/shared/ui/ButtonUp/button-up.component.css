@@ -1,0 +1,8 @@
+.button-up__container {
+  border-radius: 50%;
+  block-size: 60px;
+  inline-size: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

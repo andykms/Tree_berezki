@@ -1,0 +1,7 @@
+.button-share__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  block-size: 50px;
+  inline-size: 50px;
+}

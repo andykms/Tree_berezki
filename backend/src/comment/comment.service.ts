@@ -77,15 +77,18 @@ export class CommentService {
     const product = await this.productRepository.findOne({
       where: { id: query.productId },
     });
+
     if (!product) {
       throw new NotFoundException('товар не найден');
     }
 
     const queryBuilder = this.commentRepository.createQueryBuilder('comment');
 
+
     queryBuilder.andWhere('comment.product = :product', {
       product,
     });
+
 
     if (query.withImage) {
       queryBuilder.andWhere('comment.images.length > 0');

@@ -1,0 +1,58 @@
+.image-carousel__container {
+  scroll-snap-type: x mandatory;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* Стилизация для WebKit браузеров (Chrome, Safari, Edge) */
+
+
+.image__container {
+  position: relative;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+}
+
+.image-carousel__container::-webkit-scrollbar-thumb {
+    background-color: var(--sub);
+    border-radius: none;
+}
+
+.image-carousel__container::-webkit-scrollbar-button {
+    display: none;
+}
+
+.image-carousel__image-left {
+  position: absolute;
+  inline-size: 50%;
+  block-size: 100%;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+.image-carousel__image-left * {
+  display: none;
+}
+
+.image-carousel__image-left:hover * {
+  display: block;
+}
+
+.image-carousel__image-right {
+  position: absolute;
+  inline-size: 50%;
+  block-size: 100%;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+
+.image-carousel__image-right * {
+  display: none;
+}
+
+.image-carousel__image-right:hover * {
+  display: block;
+}

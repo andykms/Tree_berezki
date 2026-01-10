@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
-export type ButtonType = "primary" | "secondary" | "tertiary" | "liquid";
+export type ButtonType = "primary" | "secondary" | "tertiary" | "liquid" | "empty";
+export type ButtonFormType = "base" | "rounded"
 
 // Зеленый, серый, 
 @Component({
@@ -10,6 +11,8 @@ export type ButtonType = "primary" | "secondary" | "tertiary" | "liquid";
 })
 export class ButtonComponent {
   @Input() type: ButtonType = "secondary";
+  @Input() form: ButtonFormType = "base";
+  @Input() disabled = false;
   @Output() onClick = new EventEmitter<void>();
 
   get buttonClasses() {
@@ -17,6 +20,7 @@ export class ButtonComponent {
       "button": true
     };
     classes[this.type] = true;
+    classes[this.form] = true;
     return classes;
   }
 

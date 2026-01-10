@@ -1,8 +1,8 @@
 import { Component, Input} from '@angular/core';
 
-export type TextType = 'main' | 'sub' | 'crossed-out' ;
+export type TextType = 'main' | 'sub' | 'crossed-out' | "primary" ;
 
-export type TextSizeMobile = 'large_24' | 'large_20' | 'medium_16' | 'medium_14' | "small_12" | "small_10";
+export type TextSizeMobile = 'large_24' | 'large_20' | 'medium_16' | 'medium_14' | "small_12" | "small_10" | "small_8";
 
 export type TextBackground = 'light' | 'dark';
 

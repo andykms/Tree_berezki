@@ -1,4 +1,7 @@
 .img__container {
+}
+
+.rounded {
   border-radius: var(--standart-radius);
 }
 

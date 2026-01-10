@@ -1,0 +1,7 @@
+.button-exit__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  inline-size: 50px;
+  block-size: 50px;
+}

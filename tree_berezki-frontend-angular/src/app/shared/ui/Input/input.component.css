@@ -1,0 +1,92 @@
+.input__container {
+  position: relative;
+  block-size: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  background-color: inherit;
+  inline-size: 100%;
+  block-size: 25px;
+  border: none;
+  z-index: 1;
+  align-self: center;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.large_24 {
+  font-size: 24px;
+}
+
+.large_24 .input::placeholder {
+  font-size: 24px;
+}
+
+.large_20 {
+  font-size: 20px;
+}
+
+.large_20 .input::placeholder {
+  font-size: 20px;
+}
+
+.medium_16 {
+  font-size: 16px;
+}
+
+.medium_16 .input::placeholder {
+  font-size: 16px;
+}
+
+.medium_14 {
+  font-size: 14px;
+}
+
+.medium_14 .input::placeholder {
+  font-size: 14px;
+}
+
+.small_12 {
+  font-size: 12px;
+}
+
+.small_12 .input::placeholder {
+  font-size: 12px;
+}
+
+.small_10 {
+  font-size: 10px;
+}
+
+.small_10 .input::placeholder {
+  font-size: 10px;
+}
+
+.small_8 {
+  font-size: 8px;
+}
+
+.small_8 .input::placeholder {
+  font-size: 8px;
+}
+
+.light {
+  color: var(--on-light-text);
+}
+
+.light .input::placeholder {
+  color: var(--sub);
+}
+
+
+.dark {
+  color: var(--text);
+}
+
+.dark .input::placeholder {
+  color: var(--text);
+}

@@ -1,0 +1,8 @@
+.stars__container {
+  display: flex;
+  gap: 3px;
+}
+
+.large {
+  gap: 15px;
+}

@@ -9,3 +9,11 @@
 .secondary {
   background-color: var(--secondary-back);
 }
+
+.tertiary {
+  background-color: var(--tertiary);
+}
+
+.small {
+  border-radius: var(--small-radius);
+}

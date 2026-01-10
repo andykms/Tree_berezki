@@ -1,0 +1,9 @@
+<div class="button-basket-counter__container">
+  <button-ui type="empty" (onClick)="onClickRemove()" [disabled]="isDisabledRemove">
+    <text-ui [type]="textRemoveType" size="large_20" [bold]="true">-</text-ui>
+  </button-ui>
+  <text-ui type="main" size="medium_16" [bold]="true">{{ count }}</text-ui>
+  <button-ui type="empty" (onClick)="onClickAdd()" [disabled]="isDisabledAdd">
+    <text-ui [type]="textAddType" size="large_20">+</text-ui>
+  </button-ui>
+</div>

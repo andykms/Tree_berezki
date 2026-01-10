@@ -5,7 +5,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   Generated,
+  ManyToMany
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { ProductParam } from './product-param.entity';
 import { Category } from '../../category/entities/category.entity';
 import { Comment } from '../../comment/entities/comment.entity';
@@ -13,7 +15,7 @@ import { ShowcaseProducts } from '../../shop/entities/showcase-products.entity';
 import { ProductImage } from './product-image.entity';
 import { Basket } from '../../basket/entities/basket.entity';
 import { Question } from '../../question/entities/question.entity';
-
+import { Account } from '../../account/entities/account.entity';
 
 export enum EProductStatus {
   SALED = "saled",
@@ -84,6 +86,7 @@ export class Product {
   @OneToMany(() => Comment, (comment) => comment.product, {
     onDelete: 'CASCADE',
   })
+  @Exclude()
   comments: Comment[];
 
   @ManyToOne(
@@ -98,8 +101,14 @@ export class Product {
   images: ProductImage[];
 
   @OneToMany(() => Basket, (basket) => basket.product, { onDelete: 'CASCADE' })
+  @Exclude()
   baskets: Basket[];
 
   @OneToMany(()=> Question, (question) => question.product, { onDelete: 'CASCADE' })
-  questions: Question[]
+  @Exclude()
+  questions: Question[];
+
+  @ManyToMany(() => Account, (account) => account.productLikes)
+  @Exclude()
+  accountLikes: Account[];
 }

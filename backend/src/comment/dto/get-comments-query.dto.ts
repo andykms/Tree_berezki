@@ -48,4 +48,9 @@ export class GetCommentsQueryDto {
   @MinLength(1)
   @MaxLength(128)
   productId: string;
+
+  @IsString()
+  @MinLength(1)
+  @MaxLength(128)
+  showcaseProductId: string;
 }

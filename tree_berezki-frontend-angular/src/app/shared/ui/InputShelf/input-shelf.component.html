@@ -1,0 +1,11 @@
+<div class="form_input__container">
+  <div class="input__container" [style.width]="width">
+    <div [class]="placeholderClasses" [style.display]="placeholderVisible">
+      <text-ui [type]="placeholderType" [size]="placeholderSize" back="dark">{{placeholder}}</text-ui>
+    </div>
+
+    <!--НЕ ЗАБЫТЬ ВСТАВИТЬ ОБРАТНО formControlName={{formControlName}} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+    <input-ui [style.zIndex]="1" (onFocus)="onFocusEvent()" (onEmpty)="onEmptyEvent()" [background]="background" [size]="size" [minLength]="minLength" [maxLength]="maxLength"/>
+    <span [class]="borderClasses"></span>
+  </div>  
+</div>

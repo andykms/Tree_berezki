@@ -1,0 +1,120 @@
+.basket-product__container {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-areas:
+    'image price price'
+    'image title title'
+    'add options options';
+  border-radius: var(--standart-radius);
+  padding: 20px 10px 5px 10px;
+  text-decoration: none;
+  background-color: var(--primary-back);
+  inline-size: 330px;
+  block-size: 200px;
+}
+
+.basket-product__link {
+  position: absolute;
+  z-index: -1;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.basket-product__select-dot {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 1;
+}
+
+.basket-product__image {
+  z-index: -1;
+  grid-area: image;
+  inline-size: 135px;
+  block-size: 135px;
+}
+
+.basket-product__price {
+  z-index: -1;
+  display: flex;
+  grid-area: price;
+  justify-content: space-between;
+  align-items: center;
+  align-self: start;
+  padding: 0 5px;
+}
+
+.basket-product__title {
+  z-index: -1;
+  grid-area: title;
+  max-inline-size: 360px;
+}
+
+.basket-product__add-options {
+  display: flex;
+  grid-area: add;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding);
+}
+
+.basket-product__options {
+  display: flex;
+  grid-area: options;
+  justify-content: space-around;
+  align-items: center;
+  align-self: start;
+  padding: 0 5px;
+}
+
+.basket-product__button-buy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  block-size: 36px;
+  inline-size: 90px;
+}
+
+@media (width >= 430px) {
+  .basket-product__container {
+    inline-size: 410px;
+  }
+}
+
+@media (width >= 768px) {
+  .basket-product__container {
+    grid-template-areas:
+      'image title title options options price'
+      'image add nont options options price';
+    border-radius: 0;
+    padding: 20px;
+    inline-size: 100%;
+  }
+
+  .basket-product__button-buy_container {
+    display: none;
+  }
+
+  .basket-product__title {
+    padding: 0 10px;
+  }
+
+  .basket-product__price {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .basket-product__add-options {
+    justify-content: flex-start;
+    gap: 20px;
+    align-self: end;
+    padding: 0 20px;
+  }
+
+  .basket-product__image {
+    block-size: 200px;
+    inline-size: 200px;
+  }
+}

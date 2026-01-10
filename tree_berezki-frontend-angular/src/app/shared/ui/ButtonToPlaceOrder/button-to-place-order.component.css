@@ -1,0 +1,7 @@
+.button-to-place-order__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 5px;
+}

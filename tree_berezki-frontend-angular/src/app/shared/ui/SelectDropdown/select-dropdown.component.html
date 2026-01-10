@@ -1,0 +1,21 @@
+<div class="select-dropdown__container">
+  <button-ui [type]="buttonType" form="rounded" (onClick)="toggle()">
+    <div class="select-dropdown__button">
+      <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20.000000" height="20.000000" fill="none">
+        <rect id="select-svgrepo-com (4) 3" width="20.000000" height="20.000000" x="0.000000" y="0.000000" />
+        <path id="Форма 57" d="M5 8.04729L6.17851 9.22583L9.71408 5.69028L13.2496 9.22583L14.4281 8.04729L9.71408 3.33325L5 8.04729Z" [style.fill]="svgFill" fill-rule="nonzero" />
+        <path id="Форма 58" d="M5 12.0362L6.17851 10.8577L9.71408 14.3932L13.2496 10.8577L14.4281 12.0362L9.71408 16.7502L5 12.0362Z" [style.fill]="svgFill" fill-rule="nonzero" />
+      </svg>
+      <text-ui type="main" size="medium_14" [back]="textBack">{{selectedOption}}</text-ui>
+    </div>
+  </button-ui>
+  @if(isOpened) {
+    <div class="select-dropdown__options">
+      @for(option of options; track $index) {
+        <button [class]="optionButtonClass($index)" (click)="onSelect($index)">
+          <text-ui type="main" size="medium_14" [back]="textOptionBack($index)" [bold]="textOptionBold($index)">{{option}}</text-ui>
+        </button>
+      }
+    </div>
+  }
+</div>

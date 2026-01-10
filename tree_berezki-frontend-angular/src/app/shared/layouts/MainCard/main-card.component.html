@@ -3,18 +3,8 @@
     <button-like-ui [isLiked]="isLiked" type="small" (onClick)="toggleLike()"></button-like-ui>
   </div>
   <div class="main-card__image-section">
-    <image-ui
-      [src]="currentImageSrc"
-      [alt]="currentImageAlt"
-      width="200px"
-      height="267px"
-    ></image-ui>
-    <div class="main-card__image-left">
-      <button-vertical-arrow-ui (onClick)="prevImage()" type="left"></button-vertical-arrow-ui>
-    </div>
-    <div class="main-card__image-right">
-      <button-vertical-arrow-ui (onClick)="nextImage()" type="right"></button-vertical-arrow-ui>
-    </div>
+    <image-carousel-ui [images]="images" imageWidth="200px" imageHeight="267px" windowWidth="200px" windowHeight="277px" type="base" form="rounded">
+    </image-carousel-ui>
     <position-dots-ui
       [count]="countImages"
       [active]="activeImage"
@@ -69,7 +59,7 @@
           rating | number : '1.1-2'
         }}</text-ui>
       </div>
-      <text-ui type="sub" size="medium_14" background="dark">{{ countRating }} оценили</text-ui>
+      <text-ui type="sub" size="medium_14" background="dark">{{ countRatingText | countFormat }} оценили</text-ui>
     </div>
   </div>
 </div>

@@ -1,0 +1,31 @@
+<div class="basket-product__container">
+  <div class="basket-product__select-dot">
+    <select-dot-ui [selected]="isSelected" (onClick)="onSelectClick()"></select-dot-ui>
+  </div>
+  <div class="basket-product__image">
+    <image-ui width="100%" height="100%" [src]="imageSrc" [alt]="imageAlt"></image-ui>
+  </div>
+  <div class="basket-product__price">
+    <text-ui type="main" size="large_24" back="dark" [bold]="true">{{product.price | currency : 'RUB' : 'symbol-narrow'}}</text-ui>
+    <text-ui type="crossed-out" size="medium_16" back="dark">{{priceWithoutDiscount | currency : 'RUB' : 'symbol-narrow'}}</text-ui>
+  </div>  
+  <div class="basket-product__title">
+    <text-ui type="main" size="large_20" back="dark">{{product.title}}</text-ui>
+  </div>
+  <div class="basket-product__add-options">
+    <button-delete-basket-ui (onClick)="onDeleteClick()"></button-delete-basket-ui>
+    <button-share-ui type="primary" (onClick)="onShareClick()"></button-share-ui>
+    <button-like-ui [isLiked]="isLiked" (onClick)="onLikeClick()" type="large" form="primary"></button-like-ui>
+  </div>
+  <div class="basket-product__options">
+    <button-basket-counter-ui [count]="product.addedCount" [maxCount]="product.maxCount" (onAdd)="onClickAdd()" (onRemove)="onClickRemove()"></button-basket-counter-ui>
+    <div class="basket-product__button-buy_container">
+      <button-ui type="primary" form="rounded" (onClick)="onBuyClick()">
+        <div class="basket-product__button-buy">
+          <text-ui type="main" size="medium_16" back="light">Купить</text-ui>
+        </div>
+      </button-ui>
+    </div>  
+  </div>
+  <a class="basket-product__link" [routerLink]="productUrl"></a>
+</div>

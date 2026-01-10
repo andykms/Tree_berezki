@@ -1,0 +1,22 @@
+.advert-info__container {
+  background-color: var(--text);
+  block-size: 15px;
+  inline-size: 50px;
+  text-align: center;
+  border-radius: 5px;
+  position: relative;
+}
+
+.advert-info__about {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  block-size: 40px;
+  padding: 3px;
+  background-color: var(--tertiary);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+

@@ -1,0 +1,8 @@
+.text-dropdown__container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  inline-size: 100%;
+}
+

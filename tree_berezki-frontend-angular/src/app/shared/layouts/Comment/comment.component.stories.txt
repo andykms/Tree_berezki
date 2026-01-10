@@ -1,0 +1,140 @@
+/*import type { Meta, StoryObj } from '@storybook/angular';
+import { CommentComponent, TComment, TCommentType } from './comment.component';
+import { fn } from '@storybook/test';
+
+const meta: Meta<CommentComponent> = {
+  title: 'Layouts/Comment',
+  component: CommentComponent,
+  tags: ['autodocs'],
+  argTypes: {
+    type: {
+      control: 'select',
+      options: ['base', 'empty'] as TCommentType[],
+    },
+    onLike: { action: 'liked' },
+    onDislike: { action: 'disliked' },
+    onClickReply: { action: 'reply clicked' },
+    onClickCommentOption: { action: 'option selected' },
+  },
+};
+
+export default meta;
+type Story = StoryObj<CommentComponent>;
+
+// Моковые данные
+const mockComment: TComment = {
+  id: '1',
+  advantage: 'Отличное качество сборки',
+  disadvantage: 'Дорогой',
+  comment: 'Очень доволен покупкой. Качество на высоте, всем рекомендую!',
+  rating: 4.5,
+  likes: 24,
+  dislikes: 2,
+  replies: 3,
+  date: new Date('2024-01-15'),
+  senderName: 'Александр Петров',
+  images: [
+    { src: 'https://via.placeholder.com/150', alt: 'Фото товара 1' },
+    { src: 'https://via.placeholder.com/150', alt: 'Фото товара 2' },
+  ],
+  productImageSrc: 'https://via.placeholder.com/80',
+  choosenParams: [
+    { name: 'Цвет', value: 'Черный' },
+    { name: 'Размер', value: 'XL' },
+    { name: 'Материал', value: 'Хлопок' },
+  ],
+};
+
+// Базовый пример
+export const Default: Story = {
+  args: {
+    comment: mockComment,
+    isLiked: false,
+    isDisliked: false,
+    type: 'base',
+    options: ['Пожаловаться', 'Редактировать', 'Удалить'],
+    shopReply: 'Благодарим за отзыв! Рады, что вам понравилось.',
+    onLike: fn(),
+    onDislike: fn(),
+    onClickReply: fn(),
+    onClickCommentOption: fn(),
+  },
+};
+
+// Лайкнутый комментарий
+export const Liked: Story = {
+  args: {
+    ...Default.args,
+    isLiked: true,
+    isDisliked: false,
+    comment: {
+      ...mockComment,
+      likes: 25,
+    },
+  },
+};
+
+// Дизлайкнутый комментарий
+export const Disliked: Story = {
+  args: {
+    ...Default.args,
+    isLiked: false,
+    isDisliked: true,
+    comment: {
+      ...mockComment,
+      dislikes: 3,
+    },
+  },
+};
+
+// Пустой тип (если у вас есть такая логика)
+export const EmptyType: Story = {
+  args: {
+    ...Default.args,
+    type: 'empty',
+    comment: {
+      ...mockComment,
+      advantage: '',
+      disadvantage: '',
+      comment: '',
+      images: [],
+      choosenParams: [],
+    },
+  },
+};
+
+// Комментарий без изображений
+export const WithoutImages: Story = {
+  args: {
+    ...Default.args,
+    comment: {
+      ...mockComment,
+      images: [],
+    },
+  },
+};
+
+// Комментарий без ответа от магазина
+export const WithoutShopReply: Story = {
+  args: {
+    ...Default.args,
+    shopReply: '',
+  },
+};
+
+// Комментарий с большим количеством параметров
+export const WithManyParams: Story = {
+  args: {
+    ...Default.args,
+    comment: {
+      ...mockComment,
+      choosenParams: [
+        { name: 'Цвет', value: 'Черный' },
+        { name: 'Размер', value: 'XL' },
+        { name: 'Материал', value: 'Хлопок' },
+        { name: 'Бренд', value: 'Nike' },
+        { name: 'Страна', value: 'Вьетнам' },
+      ],
+    },
+  },
+};

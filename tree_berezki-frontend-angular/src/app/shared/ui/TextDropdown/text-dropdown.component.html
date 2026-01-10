@@ -1,0 +1,9 @@
+<div [class]="textDropdownClasses" [style.height]="textDropdownHeight">
+  <text-ui [text]="textToShow" [type]="type" [size]="size" [back]="back" [bold]="bold"></text-ui>
+  @if(isTextMore) {
+  <button-ui type="empty" (onClick)="toggle()">
+    <text-ui [type]="textButtonType" [size]="size" [back]="back">{{
+      textButtonShow
+    }}</text-ui> </button-ui
+  >}
+</div>

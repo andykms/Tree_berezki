@@ -1,5 +1,6 @@
 .text {
   font-family: var(--font);
+  transition: font-size 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 .main:not(.light){
@@ -17,6 +18,10 @@
 .crossed-out {
   text-decoration: line-through;
   color: var(--on-light-text);
+}
+
+.primary {
+  color: var(--primary);
 }
 
 .large_24 {
@@ -41,6 +46,10 @@
 
 .small_10 {
   font-size: 10px;
+}
+
+.small_8 {
+  font-size: 8px;
 }
 
 .light .main {

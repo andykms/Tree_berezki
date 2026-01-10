@@ -1,14 +1,45 @@
-<main-card-ui 
-[images]="images" 
-[title]="'Зубочистка'"
-shop="Сельхозяющка"
-[rating]=4.7
-[price]=1294
-[discount]=10
-[countRating]=443
-[addedCount]="addedCount"
-[isLiked]="isLiked"
-[addedCount]="addedCount"
-(onLike)="onLike()"
-(onAdd)="onAdd()"
-></main-card-ui>
+<main-card-layout
+  [images]="images"
+  [title]="'Зубочистка'"
+  shop="Сельхозяющка"
+  [rating]="4.7"
+  [price]="1294"
+  [discount]="10"
+  [countRating]="443"
+  [addedCount]="addedCount"
+  [isLiked]="isLiked"
+  [addedCount]="addedCount"
+  (onLike)="onLike()"
+  (onAdd)="onAdd()"
+></main-card-layout>
+<input-shelf-ui
+  width="300px"
+  placeholder="Имя, например, Андрей"
+  [hasPlaceholderOnInput]="true"
+></input-shelf-ui>
+<input-code-ui [formControlNames]="formControlNames"></input-code-ui>
+<select-dropdown-ui
+  [options]="options"
+  (onChange)="onChangeDropdown($event)"
+  [selectedIndex]="selectedDropdown"
+></select-dropdown-ui>
+<div [style.width]="basketWidth">
+  <basket-product-layout
+    [product]="basketProducts[0]"
+    [productUrl]="basketProductUrl"
+    [isSelected]="isSelectedBasketProduct"
+    [isLiked]="isLikedBasketProduct"
+    (onDelete)="onDeleteBasketProduct($event)"
+    (onShare)="onShareBasketProduct($event)"
+    (onLike)="onLikeBasketProduct($event)"
+    (onAdd)="onAddBasketProduct($event)"
+    (onRemove)="onRemoveBasketProduct($event)"
+    (onToggleSelect)="onToggleSelectBasketProduct($event)"
+    (onClickBuy)="onBuyBasketProduct($event)"
+  ></basket-product-layout>
+</div>
+
+
+<div [style.width]="commentWidth">
+  <comment-layout [comment]="comment" [isLiked]="commentIsLiked" [isDisliked]="commentIsDisliked" [shopReply]="shopReply" [options]="commentOptions" (onLike)="commentOnLike()" (onDislike)="commentOnDislike()" (onClickReply)="commentOnReply()"></comment-layout>
+</div>

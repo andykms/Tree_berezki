@@ -1,4 +1,4 @@
-<div class="img__container" [style.width]="width" [style.height]="height" [style.display]="isLoading() || isError() ? 'none' : 'block'">
+<div [class]="imageClasses" [style.maxHeight]="maxHeight" [style.width]="width" [style.height]="height" [style.display]="isLoading() || isError() ? 'none' : 'block'">
   <img
     [src]="src"
     [alt]="alt"

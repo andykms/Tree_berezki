@@ -1,0 +1,17 @@
+.menu-mobile__container {
+  inline-size: 100%;
+  block-size: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  background-color: var(--secondary-back);
+}
+
+.menu-mobile__svg {
+  fill: var(--text);
+}
+
+.menu-mobile__link-active .menu-mobile__svg {
+  fill: var(--primary);
+}

@@ -5,10 +5,14 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToMany
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 import { User } from '../../user/entities/user.entity';
 import { ShowcaseProducts } from './showcase-products.entity';
-import * as bcrypt from 'bcrypt';
+import { Account } from '../../account/entities/account.entity';
+
 
 @Entity()
 export class Shop {
@@ -35,7 +39,9 @@ export class Shop {
   })
   created_at: Date;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   email: string;
 
   @ManyToOne(() => User, (user) => user.shops)
@@ -62,6 +68,7 @@ export class Shop {
   country: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @BeforeInsert()
@@ -82,4 +89,8 @@ export class Shop {
     { onDelete: 'CASCADE' },
   )
   showcaseProducts: ShowcaseProducts[];
+
+  @ManyToMany(() => Account, (account) => account.shopLikes)
+  @Exclude()
+  accountLikes: Account[];
 }

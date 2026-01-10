@@ -1,0 +1,16 @@
+.search {
+  block-size: 80px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 25px;
+}
+
+.light {
+  background-color: var(--text);
+}
+
+.dark {
+  background-color: var(--tertiary);
+}
+

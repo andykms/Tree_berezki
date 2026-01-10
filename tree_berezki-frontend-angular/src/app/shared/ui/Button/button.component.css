@@ -7,6 +7,24 @@
   outline: none;
 }
 
+.empty {
+  background-color: transparent;
+  border-radius: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  color: var(--disabled);
+}
+
+button:disabled svg {
+  fill: var(--disabled);
+}
+
+.rounded {
+  border-radius: 100em;
+}
+
 .primary {
   background-color: var(--primary);
 }
@@ -22,6 +40,7 @@
 
 .tertiary {
   background-color: var(--tertiary);
+  backdrop-filter: blur(10px);
 }
 
 .tertiary:hover {

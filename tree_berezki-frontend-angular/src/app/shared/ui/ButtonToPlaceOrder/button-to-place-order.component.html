@@ -1,0 +1,10 @@
+@if(isDisabled) {
+<button-ui (onClick)="onClickButton()" type="primary">
+  <div class="button-to-place-order__container">
+    <text-ui type="main" size="large_24" [bold]="true" back="light">К оформлению</text-ui>
+    <text-ui type="main" size="medium_16" [bold]="true" back="light"
+      >{{ count }} шт, {{ summ | currency : 'RUB' : 'symbol-narrow' }}</text-ui
+    >
+  </div>
+</button-ui>
+}

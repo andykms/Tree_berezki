@@ -1,9 +1,10 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 import { ButtonComponent } from "../Button/button.component";
-
+import { ButtonType } from "../Button/button.component";
 
 export type ButtonLikeType = "small" | "large";
+export type ButtonFormType = "base" | "tertiary" | "primary";
 
 @Component({
   imports: [
@@ -16,6 +17,7 @@ export type ButtonLikeType = "small" | "large";
 export class ButtonLikeComponent {
   @Input() isLiked: boolean = false;
   @Input() type: ButtonLikeType = "small";
+  @Input() form: ButtonFormType = "tertiary";
   @Output() onClick = new EventEmitter<void>();
 
   toggle() {
@@ -38,6 +40,14 @@ export class ButtonLikeComponent {
   }
 
   get fill() {
-    return this.isLiked ? "var(--text)" : "none";
+    return this.isLiked ? (this.form === "primary" ? "var(--primary)": "var(--text)"): "transparent";
+  }
+
+  get outline() {
+    return this.form === "primary" ? "var(--primary)" : "var(--text)";
+  }
+
+  get buttonType(): ButtonType {
+    return this.form === "tertiary" ? "tertiary": "empty";
   }
 }

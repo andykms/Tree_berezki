@@ -94,10 +94,4 @@ export class ShopService {
   private __formatOneShopResponse(shop: Shop): GetShopsResponseDto {
     return this.__formatResponse([this.__shopResponseAdapting(shop)]);
   }
-
-  private __formatManyShopsResponse(shops: Shop[]): GetShopsResponseDto {
-    return this.__formatResponse(
-      shops.map((shop) => this.__shopResponseAdapting(shop)),
-    );
-  }
 }

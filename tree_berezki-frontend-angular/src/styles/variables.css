@@ -13,9 +13,12 @@
   --secondary: #283242;
   --tertiary: rgb(0, 0, 0, 0.5);
   --tertiary-hover: rgb(0, 0, 0, 0.7);
+  --disabled: rgb(0,0,0,0.25);
   --danger-text: #FF0000;
   --star: #FFD700;
   --standart-radius: 15px;
+  --small-radius: 10px;
   --standart-padding: 20px;
   --secondary-padding: 15px;
+  --form-inactive: #c4c4c4;
 }

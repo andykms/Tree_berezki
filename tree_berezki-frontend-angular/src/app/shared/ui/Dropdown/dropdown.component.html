@@ -1,0 +1,12 @@
+<div class="dropdown__container">
+  <ng-content></ng-content>
+  @if(isOpened) {
+    <div class="dropdown__options">
+      @for(option of options; track $index) {
+        <button class="dropdown__option-button" (click)="onSelect($index)">
+          <text-ui type="main" size="medium_14" back="dark">{{option}}</text-ui>
+        </button>
+      }
+    </div>
+  }
+</div>

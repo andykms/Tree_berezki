@@ -7,6 +7,7 @@ import {
   OneToMany,
   BeforeInsert,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { Account } from '../../account/entities/account.entity';
 import { Shop } from '../../shop/entities/shop.entity';
 
@@ -16,6 +17,7 @@ export class User {
   id: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @BeforeInsert()
@@ -32,6 +34,7 @@ export class User {
     type: 'jsonb',
     default: [],
   })
+  @Exclude()
   sessions: ISessionInfo[];
 
   @OneToMany(() => Account, (account) => account.user)
