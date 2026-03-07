@@ -15,6 +15,10 @@ export class ShowcaseProductsService {
     private readonly showcaseProductsRepository: Repository<ShowcaseProducts>,
   ) {}
 
+  async findOne(id: string) {
+    return await this.showcaseProductsRepository.findOneOrFail({ where: { id } });
+  }
+
   async createShowcaseProduct(
     id: string,
     showcaseProduct: CreateShowcaseProductDto,

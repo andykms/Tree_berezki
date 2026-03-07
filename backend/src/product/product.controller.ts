@@ -7,18 +7,16 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { UseGuards } from '@nestjs/common';
+import { Product } from './entities/product.entity';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { JwtShopGuard } from '../auth/guards/shop.guard';
 import { GetProductQueryDto } from './dto/get-products.dto';
 import { GetProductsResponseDto } from './dto/get-products-response.dto';
-import { GetShowcaseProductResponseDto } from './dto/get-showcase-repsponse.dto';
-import { CreateParamDto } from '../param/dto/create-param.dto';
-import { GetParamsQueryDto } from '../param/dto/get-params.dto';
 
 @Controller('product')
 export class ProductController {
@@ -39,7 +37,7 @@ export class ProductController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<GetProductsResponseDto> {
+  async findOne(@Param('id') id: string): Promise<Product> {
     return await this.productService.findOne(id);
   }
 

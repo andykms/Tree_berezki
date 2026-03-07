@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Inject
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,16 +15,19 @@ import { User } from '../user/entities/user.entity';
 import { UpdateOrderByUserDto } from './dto/update-by-user-order.dto';
 import { EOrderStatus } from './entities/order.entity';
 import { GetOrdersQueryDto } from './dto/get-orders.dto';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class OrderService {
+
+  @Inject(ProductService)
+  private readonly productService: ProductService;
+
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(OrderProduct)
     private readonly orderProductRepository: Repository<OrderProduct>,
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
   ) {}
 
   async create(createOrderDto: CreateOrderDto, user: User) {
@@ -33,12 +37,7 @@ export class OrderService {
     const products: Product[] = [];
 
     for (const product of orderProducts) {
-      const productEntity = await this.productRepository.findOne({
-        where: { id: product.productId },
-      });
-      if (!productEntity) {
-        throw new NotFoundException('продукт не найден');
-      }
+      const productEntity = await this.productService.findOne(product.productId);
 
       realTotal +=
         productEntity.price_rubles *

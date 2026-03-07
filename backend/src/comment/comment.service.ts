@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  Inject
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +10,6 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { User } from '../user/entities/user.entity';
 import { Comment } from './entities/comment.entity';
-import { Product } from '../product/entities/product.entity';
 import { GetCommentsQueryDto } from './dto/get-comments-query.dto';
 import { ESortedCommentBy } from './dto/get-comments-query.dto';
 import { LikeCommentDto } from './dto/like-comment.dto';
@@ -21,9 +21,14 @@ import { Reply } from './entities/reply.entity';
 import { ReplyLike } from './entities/reply-likes.entity';
 import { GetRepliesQueryDto } from './dto/get-replies.dto';
 import { LikeReplyDto } from './dto/like-reply.dto';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class CommentService {
+
+  @Inject(ProductService)
+  private productService: ProductService;
+
   constructor(
     @InjectRepository(Reply)
     private replyRepository: Repository<Reply>,
@@ -33,8 +38,6 @@ export class CommentService {
     private commentRepository: Repository<Comment>,
     @InjectRepository(CommentImage)
     private commentImageRepository: Repository<CommentImage>,
-    @InjectRepository(Product)
-    private productRepository: Repository<Product>,
     @InjectRepository(CommentLike)
     private commentLikeRepository: Repository<CommentLike>,
   ) {}
@@ -52,10 +55,7 @@ export class CommentService {
       throw new BadRequestException('комментарий уже существует');
     }
 
-    const product = await this.productRepository.findOneOrFail({
-      where: { id: createCommentDto.productId },
-    });
-
+    const product = await this.productService.findOne(createCommentDto.productId);
     const images: CommentImage[] = [];
 
     for (const imageDto of createCommentDto.images) {
@@ -74,14 +74,7 @@ export class CommentService {
   }
 
   async findAll(query: GetCommentsQueryDto) {
-    const product = await this.productRepository.findOne({
-      where: { id: query.productId },
-    });
-
-    if (!product) {
-      throw new NotFoundException('товар не найден');
-    }
-
+    const product = await this.productService.findOne(query.productId);
     const queryBuilder = this.commentRepository.createQueryBuilder('comment');
 
     queryBuilder.andWhere('comment.product = :product', {

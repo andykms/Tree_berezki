@@ -7,7 +7,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
-import { Param } from '../../product/entities/param.entity';
+import { Param } from '../../param/entities/param.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity()

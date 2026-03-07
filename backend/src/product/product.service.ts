@@ -5,7 +5,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { Category } from '../category/entities/category.entity';
-import { ShowcaseProducts } from '../showcase-products/entities/showcase-products.entity';
 import { ProductParam } from './entities/product-param.entity';
 import { Param } from '../param/entities/param.entity';
 import { GetProductQueryDto } from './dto/get-products.dto';
@@ -13,12 +12,11 @@ import { IGetProductResponse } from './dto/get-product-response.dto';
 import { GetProductsResponseDto } from './dto/get-products-response.dto';
 import { CreateProductParamDto } from './dto/create-product.dto';
 import { SelectQueryBuilder } from 'typeorm/browser';
-import { GetShowcaseProductResponseDto } from './dto/get-showcase-repsponse.dto';
 import { FileMoveService } from '../file-move/file-move.service';
 import { ProductImage } from './entities/product-image.entity';
-import { Measure } from '../measure/entities/measure.entity';
-import { GetParamsQueryDto } from '../param/dto/get-params.dto';
 import { ParamService } from '../param/param.service';
+import { ShowcaseProductsService } from '../showcase-products/showcase-products.service';
+import { CategoryService } from '../category/category.service';
 
 export enum TSorts {
   'ASC',
@@ -35,19 +33,19 @@ export class ProductService {
   @Inject(ParamService)
   private readonly paramService: ParamService;
 
+  @Inject(ShowcaseProductsService)
+  private readonly showcaseProductsService: ShowcaseProductsService;
+
+  @Inject(Category)
+  private readonly categoryService: CategoryService
+
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
-    @InjectRepository(ShowcaseProducts)
-    private readonly showcaseProductsRepository: Repository<ShowcaseProducts>,
     @InjectRepository(ProductParam)
     private readonly productParamRepository: Repository<ProductParam>,
     @InjectRepository(ProductImage)
     private readonly productImageRepository: Repository<ProductImage>,
-    @InjectRepository(Measure)
-    private readonly measureRepository: Repository<Measure>,
     private readonly fileMoveService: FileMoveService,
   ) {}
 
@@ -59,9 +57,7 @@ export class ProductService {
 
     // ищем группу товаров, что она действительно существует, а также чтобы создать продукт
     const showcaseProducts =
-      await this.showcaseProductsRepository.findOneOrFail({
-        where: { id: showcaseId },
-      });
+      await this.showcaseProductsService.findOne(showcaseId);
 
     //ищем все обязательные параметры категории
     const requiredParams =
@@ -100,11 +96,11 @@ export class ProductService {
     return this.__formatOneProductResponse(saved);
   }
 
-  async findOne(id: string): Promise<GetProductsResponseDto> {
+  async findOne(id: string): Promise<Product> {
     const product = await this.productRepository.findOneOrFail({
       where: { id },
     });
-    return this.__formatResponse([this.__productResponseAdapting(product)]);
+    return product;
   }
 
   async update(
@@ -137,9 +133,7 @@ export class ProductService {
     }
 
     let newCategory: Category | null = updateProductDto.categoryId
-      ? await this.categoryRepository.findOne({
-          where: { id: updateProductDto.categoryId },
-        })
+      ? await this.categoryService.findOne(updateProductDto.categoryId)
       : null;
 
     if (updateProductDto.params) {

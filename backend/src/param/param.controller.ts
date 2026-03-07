@@ -12,6 +12,7 @@ import { JwtShopGuard } from '../auth/guards/shop.guard';
 import { ParamService } from './param.service';
 import { CreateParamDto } from './dto/create-param.dto';
 import { GetParamsQueryDto } from './dto/get-params.dto';
+import { GetRequiredParamsQueryDto } from './dto/get-required-params.dto';
 
 @Controller('param')
 export class ParamController {
@@ -32,5 +33,10 @@ export class ParamController {
   @Get(':id')
   async getParam(@Param('id') id: string) {
     return await this.paramService.findOne(id);
+  }
+
+  @Get('required-params')
+  async findRequiredParam(@Query() query: GetRequiredParamsQueryDto) {
+    return await this.paramService.getParamsByCategory(query.categoryId);
   }
 }

@@ -6,8 +6,8 @@ import { Reply } from './entities/reply.entity';
 import { ReplyLike } from './entities/reply-likes.entity';
 import { Comment } from './entities/comment.entity';
 import { CommentImage } from './entities/comment-image.entity';
-import { Product } from '../product/entities/product.entity';
 import { CommentLike } from './entities/comment-likes.entity';
+import { ProductModule } from '../product/product.module';
 
 @Module({
   controllers: [CommentController],
@@ -19,8 +19,8 @@ import { CommentLike } from './entities/comment-likes.entity';
       ReplyLike,
       CommentImage,
       CommentLike,
-      Product,
     ]),
+    ProductModule,
   ],
 })
 export class CommentModule {}

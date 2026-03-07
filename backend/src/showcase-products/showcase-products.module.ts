@@ -9,5 +9,6 @@ import { ShopModule } from '../shop/shop.module';
   imports: [TypeOrmModule.forFeature([ShowcaseProducts]), ShopModule],
   controllers: [ShowcaseProductsController],
   providers: [ShowcaseProductsService],
+  exports: [ShowcaseProductsService],
 })
 export class ShowcaseProductsModule {}

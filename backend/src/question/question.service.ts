@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -6,15 +6,18 @@ import { UpdateQuestionDto } from './dto/update-question.dto';
 import { GetQuestionQueryDto } from './dto/get-question.dto';
 import { User } from '../user/entities/user.entity';
 import { Question } from './entities/question.entity';
-import { Product } from '../product/entities/product.entity';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class QuestionService {
+
+  @Inject(ProductService)
+  private readonly productService: ProductService;
+
+
   constructor(
     @InjectRepository(Question)
-    private readonly questionRepository: Repository<Question>,
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    private readonly questionRepository: Repository<Question>
   ) {}
 
   async create(createQuestionDto: CreateQuestionDto, user: User) {
@@ -22,9 +25,7 @@ export class QuestionService {
       (account) => account.id === createQuestionDto.accountId,
     );
 
-    const product = await this.productRepository.findOneOrFail({
-      where: { id: createQuestionDto.productId },
-    });
+    const product = await this.productService.findOne(createQuestionDto.productId);
 
     const question = await this.questionRepository.create({
       ...createQuestionDto,
