@@ -11,7 +11,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     private configService: ConfigService,
     private usersService: UserService,
   ) {
-
     const jwtConfig = configService.get('JWT_CONFIG');
 
     if (!jwtConfig) {
@@ -30,7 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(jwtPayload: { sub: string }) {
-    console.log(jwtPayload);
     const user = await this.usersService.findOne(jwtPayload.sub);
 
     if (!user) {

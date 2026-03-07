@@ -1,0 +1,442 @@
+/* Контейнер */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Карточка */
+.register-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 500px;
+  padding: 40px 35px;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Заголовок */
+.register-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.register-title {
+  color: var(--text);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+
+.register-subtitle {
+  color: var(--sub);
+  font-size: 16px;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Форма */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-hint {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sub);
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Поля ввода */
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background-color: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  transition: var(--transition);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: var(--sub);
+  opacity: 0.7;
+}
+
+.form-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+}
+
+.form-input.invalid {
+  border-color: var(--danger);
+  background-color: rgba(230, 57, 70, 0.05);
+}
+
+.form-input.invalid:focus {
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+}
+
+/* Обертка для пароля */
+.password-wrapper {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--sub);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px;
+  transition: var(--transition);
+  z-index: 2;
+}
+
+.password-toggle:hover {
+  color: var(--primary);
+}
+
+/* Требования к паролю */
+.password-requirements {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+  border-left: 3px solid var(--primary);
+}
+
+.requirements-title {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.requirements-list li {
+  color: var(--sub);
+  font-size: 12px;
+  margin-bottom: 4px;
+  padding-left: 20px;
+  position: relative;
+  transition: var(--transition);
+}
+
+.requirements-list li:before {
+  content: '✗';
+  position: absolute;
+  left: 0;
+  color: var(--danger);
+}
+
+.requirements-list li.valid {
+  color: var(--primary);
+}
+
+.requirements-list li.valid:before {
+  content: '✓';
+  color: var(--primary);
+}
+
+/* Сообщения об ошибках */
+.error-message {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 6px;
+  min-height: 18px;
+  animation: fadeIn 0.3s ease;
+}
+
+.server-error {
+  color: var(--danger);
+  background-color: rgba(230, 57, 70, 0.1);
+  border-left: 4px solid var(--danger);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin: 10px 0;
+  animation: shake 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Кнопка отправки */
+.submit-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 255, 0, 0.25);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  background-color: var(--sub);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.submit-button.loading {
+  opacity: 0.8;
+  cursor: wait;
+}
+
+/* Спиннер загрузки */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Тестовые данные */
+.test-hint {
+  text-align: center;
+  margin: 15px 0;
+  padding-top: 15px;
+  border-top: 1px dashed var(--border);
+}
+
+.test-button {
+  background: transparent;
+  color: var(--sub);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.test-button:hover {
+  background-color: rgba(0, 255, 0, 0.05);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Ссылки */
+.auth-links {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.auth-link-text {
+  color: var(--sub);
+  font-size: 14px;
+  margin: 0;
+}
+
+.auth-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 5px;
+  transition: var(--transition);
+}
+
+.auth-link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Футер */
+.register-footer {
+  margin-top: 30px;
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-text {
+  color: var(--sub);
+  font-size: 12px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.footer-link {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .register-card {
+    padding: 30px 25px;
+    max-width: 90%;
+  }
+  
+  .register-title {
+    font-size: 24px;
+  }
+  
+  .register-subtitle {
+    font-size: 14px;
+  }
+  
+  .form-input {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+  
+  .submit-button {
+    padding: 14px;
+    font-size: 15px;
+  }
+  
+  .input-hint {
+    display: none; /* Скрываем подсказку на мобильных */
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 15px;
+    background: var(--card-bg);
+  }
+  
+  .register-card {
+    padding: 25px 20px;
+    max-width: 100%;
+    box-shadow: none;
+    border: 1px solid var(--border);
+  }
+  
+  .register-title {
+    font-size: 22px;
+  }
+  
+  .password-requirements {
+    padding: 10px;
+  }
+  
+  .requirements-list li {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 320px) {
+  .register-header {
+    margin-bottom: 25px;
+  }
+  
+  .register-form {
+    gap: 20px;
+  }
+  
+  .form-input {
+    padding: 10px 12px;
+  }
+}
+
+/* Дополнительные улучшения UX */
+.form-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Плавное появление элементов */
+.register-card > * {
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.register-card > *:nth-child(1) { animation-delay: 0.1s; }
+.register-card > *:nth-child(2) { animation-delay: 0.2s; }
+.register-card > *:nth-child(3) { animation-delay: 0.3s; }

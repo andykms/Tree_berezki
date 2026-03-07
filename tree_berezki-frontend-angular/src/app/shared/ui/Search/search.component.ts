@@ -1,10 +1,15 @@
 import { Component, Input } from "@angular/core";
+import { ReactiveFormsModule, FormsModule, FormControl } from "@angular/forms";
 import { InputComponent } from "../Input/input.component";
 import { InputValueSizeMobile, InputValueBackground } from "../Input/input.component";
 
+
+
 @Component({
   imports: [
-    InputComponent
+    InputComponent,
+    ReactiveFormsModule,
+    FormsModule
   ],
   selector: "search-ui",
   templateUrl: "./search.component.html",
@@ -16,7 +21,7 @@ export class SearchComponent {
   @Input() width: string = "auto";
   @Input() size: InputValueSizeMobile = "medium_16";
   @Input() maxLength: number = 32;
-  @Input() formControlName: string = "";
+  @Input() control: FormControl = new FormControl('');
 
   hasInput: boolean = false;
 
@@ -29,7 +34,7 @@ export class SearchComponent {
   }
 
   get svgFill() {
-    return this.background === "dark" ? "var(--text)" : "var(--sub)";
+    return this.background === "dark" ? "var(--text)" : "var(--sub-text)";
   }
 
   onFocusEvent() {

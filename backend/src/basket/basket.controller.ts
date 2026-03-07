@@ -8,7 +8,7 @@ import {
   Delete,
   UseGuards,
   Req,
-  Query
+  Query,
 } from '@nestjs/common';
 import { BasketService } from './basket.service';
 import { CreateBasketDto } from './dto/create-basket.dto';

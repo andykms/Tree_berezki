@@ -1,4 +1,4 @@
-<div class="advert-info__container" mouseEnter (onMouseEnter)="onMouseEnterTitle()" (onMouseLeave)="onMouseLeaveTitle()">
+<div class="advert-info__container" mouseEnter (mouseEnter)="onMouseEnterTitle()" (mouseLeave)="onMouseLeaveTitle()">
   <text-ui type="main" size="small_10" back="light">{{title}}</text-ui>
   @if(isWatchInfo) {
       <div class="advert-info__about">

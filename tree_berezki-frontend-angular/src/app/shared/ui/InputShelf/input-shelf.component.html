@@ -3,9 +3,7 @@
     <div [class]="placeholderClasses" [style.display]="placeholderVisible">
       <text-ui [type]="placeholderType" [size]="placeholderSize" back="dark">{{placeholder}}</text-ui>
     </div>
-
-    <!--НЕ ЗАБЫТЬ ВСТАВИТЬ ОБРАТНО formControlName={{formControlName}} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-    <input-ui [style.zIndex]="1" (onFocus)="onFocusEvent()" (onEmpty)="onEmptyEvent()" [background]="background" [size]="size" [minLength]="minLength" [maxLength]="maxLength"/>
+    <div [style.zIndex]="1"><ng-content></ng-content></div>
     <span [class]="borderClasses"></span>
   </div>  
 </div>

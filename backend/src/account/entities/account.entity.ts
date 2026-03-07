@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
-  ManyToMany
+  ManyToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { User } from '../../user/entities/user.entity';
@@ -19,7 +19,11 @@ import { ReplyLike } from '../../comment/entities/reply-likes.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Shop } from '../../shop/entities/shop.entity';
 
-export enum sexTypes {MALE = 'male', FEMALE = 'female', NOT_SPECIFIED = 'not specified'};
+export enum sexTypes {
+  MALE = 'male',
+  FEMALE = 'female',
+  NOT_SPECIFIED = 'not specified',
+}
 
 @Entity()
 export class Account {
@@ -55,31 +59,39 @@ export class Account {
   @Exclude()
   user: User;
 
-  @OneToMany(() => Order, (order) => order.account, {onDelete: 'CASCADE'})
+  @OneToMany(() => Order, (order) => order.account, { onDelete: 'CASCADE' })
   @Exclude()
   orders: Order[];
 
-  @OneToMany(() => Comment, (comment) => comment.account, {onDelete: 'CASCADE'})
+  @OneToMany(() => Comment, (comment) => comment.account, {
+    onDelete: 'CASCADE',
+  })
   @Exclude()
   comments: Comment[];
 
-  @OneToMany(() => Reply, (reply) => reply.account, {onDelete: 'CASCADE'})
+  @OneToMany(() => Reply, (reply) => reply.account, { onDelete: 'CASCADE' })
   @Exclude()
   replies: Reply[];
 
-  @OneToMany(() => Basket, (basket) => basket.account, {onDelete: 'CASCADE'})
+  @OneToMany(() => Basket, (basket) => basket.account, { onDelete: 'CASCADE' })
   @Exclude()
   baskets: Basket[];
 
-  @OneToMany(() => CommentLike, (commentLike) => commentLike.account, {onDelete: 'CASCADE'})
+  @OneToMany(() => CommentLike, (commentLike) => commentLike.account, {
+    onDelete: 'CASCADE',
+  })
   @Exclude()
   commentLikes: CommentLike[];
 
-  @OneToMany(() => ReplyLike, (replyLike) => replyLike.account, {onDelete: 'CASCADE'})
+  @OneToMany(() => ReplyLike, (replyLike) => replyLike.account, {
+    onDelete: 'CASCADE',
+  })
   @Exclude()
   replyLikes: ReplyLike[];
 
-  @OneToMany(() => Question, (question) => question.account, {onDelete: 'CASCADE'})
+  @OneToMany(() => Question, (question) => question.account, {
+    onDelete: 'CASCADE',
+  })
   @Exclude()
   questions: Question[];
 

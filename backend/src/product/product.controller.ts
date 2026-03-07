@@ -13,17 +13,19 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from '../auth/guards/jwt.guard';
-import { ShopGuard } from '../auth/guards/shop.guard';
+import { JwtShopGuard } from '../auth/guards/shop.guard';
 import { GetProductQueryDto } from './dto/get-products.dto';
 import { GetProductsResponseDto } from './dto/get-products-response.dto';
 import { GetShowcaseProductResponseDto } from './dto/get-showcase-repsponse.dto';
+import { CreateParamDto } from '../param/dto/create-param.dto';
+import { GetParamsQueryDto } from '../param/dto/get-params.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseGuards(JwtShopGuard)
   @UseGuards(JwtGuard)
-  @UseGuards(ShopGuard)
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
     return await this.productService.create(createProductDto);
@@ -41,8 +43,8 @@ export class ProductController {
     return await this.productService.findOne(id);
   }
 
+  @UseGuards(JwtShopGuard)
   @UseGuards(JwtGuard)
-  @UseGuards(ShopGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -51,15 +53,10 @@ export class ProductController {
     return await this.productService.update(id, updateProductDto);
   }
 
+  @UseGuards(JwtShopGuard)
   @UseGuards(JwtGuard)
-  @UseGuards(ShopGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.productService.remove(id);
-  }
-
-  @Get('showcase/:id')
-  async getShowcaseProduct(@Param('id') id: string): Promise<GetShowcaseProductResponseDto> {
-    return await this.productService.findShowcase(id);
   }
 }

@@ -54,7 +54,7 @@
     </div>
   </div>
   <div class="comment__images"> 
-    <image-carousel-ui [images]="comment.images" imageWidth="100%" imageHeight="100%" windowWidth="100%" imageHeight="100%" type="base" form="base" imageMaxHeight="200px"></image-carousel-ui>
+    <image-carousel-ui [images]="comment.images" imageWidth="100%" imageHeight="100%" windowWidth="100%" imageHeight="100%" type="base" form="rounded" imageMaxHeight="200px"></image-carousel-ui>
   </div>
   <div class="comment__message">
     <text-ui type="sub" size="medium_14" back="dark"
@@ -72,6 +72,18 @@
       <text-ui type="main" size="medium_14" back="dark">{{ comment.comment }}</text-ui></text-ui
     >
   </div>
+  @if(hasProductChoosenParams) {
+    <div class="comment__choosen-variant">
+      <image-ui width="50px" height="67px" [src]="comment.productImageSrc" alt="изображение выбранного товара" type="rounded"></image-ui>
+      <ul class="comment__choosen-variant_params">
+        @for (param of comment.choosenParams; track param) {
+          <li>
+            <text-ui type="sub" size="medium_14" back="dark">{{param.name}}: {{param.value}}</text-ui>
+          </li>
+        }
+      </ul>
+    </div>
+  }
   <div class="comment__events-info">
     <button-ui type="empty" (onClick)="onClickReplyButton()">
       <div class="comment__event">

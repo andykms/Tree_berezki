@@ -76,5 +76,6 @@
   color: var(--on-light-text);
 }
 
-
-
+.danger {
+  color: var(--danger-text);
+}

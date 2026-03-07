@@ -8,15 +8,30 @@
   "header"
   "images"
   "message"
+  "variant"
   "events"
   "shop-reply";
   inline-size: 100%;
 }
 
+.comment__choosen-variant {
+  grid-area: variant;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.comment__choosen-variant_params {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+}
+
 .comment__images {
   grid-area: images;
   inline-size: 100%;
-  block-size: 400px;
+  block-size: auto;
 }
 
 .base {
@@ -100,6 +115,7 @@
     "header header header"
     "message message images"
     "message message images"
+    "variant variant variant"
     "events events events"
     "shop-reply shop-reply shop-reply";
   }

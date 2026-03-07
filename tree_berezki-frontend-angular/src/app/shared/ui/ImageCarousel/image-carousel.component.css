@@ -28,7 +28,7 @@
 .image-carousel__image-left {
   position: absolute;
   inline-size: 50%;
-  block-size: 100%;
+  block-size: 90%;
   inset-block-start: 0;
   inset-inline-start: 0;
 }
@@ -44,7 +44,7 @@
 .image-carousel__image-right {
   position: absolute;
   inline-size: 50%;
-  block-size: 100%;
+  block-size: 90%;
   inset-block-start: 0;
   inset-inline-end: 0;
 }

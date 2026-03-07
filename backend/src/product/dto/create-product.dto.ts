@@ -57,6 +57,17 @@ export class CreateProductDto {
   @ValidateNested({ each: true })
   @MaxLength(64)
   params: CreateProductParamDto[];
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(192)
+  shopId: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  @Type(() => CreateProductImageDto)
+  @ValidateNested({ each: true })
+  images: CreateProductImageDto[];
 }
 
 export class CreateProductParamDto {
@@ -65,4 +76,9 @@ export class CreateProductParamDto {
   @MaxLength(192)
   paramId: string;
   value: string;
+}
+
+export class CreateProductImageDto {
+  url: string;
+  position: number;
 }

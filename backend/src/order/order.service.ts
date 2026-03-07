@@ -77,9 +77,16 @@ export class OrderService {
     const limit = Number(query.limit) || 10;
     const page = Number(query.page) || 1;
 
-    const account = user.accounts.find((account)=> account.id === query.accountId);
+    const account = user.accounts.find(
+      (account) => account.id === query.accountId,
+    );
 
-    const orders = await this.orderRepository.find({where: {account}, take: limit, skip: page * limit, order: {created_at: 'DESC'}})
+    const orders = await this.orderRepository.find({
+      where: { account },
+      take: limit,
+      skip: page * limit,
+      order: { created_at: 'DESC' },
+    });
     return {
       items: orders,
       total: orders.length,
@@ -91,7 +98,11 @@ export class OrderService {
   }
 
   async update(id: string, updateOrderDto: UpdateOrderDto) {
-    return await this.orderRepository.update(id, updateOrderDto);
+    const order = await this.orderRepository.findOneOrFail({ where: { id } });
+
+    const newOrder = this.orderRepository.merge(order, updateOrderDto);
+
+    return await this.orderRepository.save(newOrder);
   }
 
   async updateByUser(id: string, updateOrderDto: UpdateOrderByUserDto) {

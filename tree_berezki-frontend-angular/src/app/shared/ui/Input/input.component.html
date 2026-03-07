@@ -1,4 +1,4 @@
 
 <!--НЕ ЗАБЫТЬ ВСТАВИТЬ ОБРАТНО formControlName={{formControlName}} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 
-<input inputFocus (onFocus)="onFocusEvent()" (onEmpty)="onEmptyEvent()" (onBlur)="onBlurEvent()" [placeholder]="placeholder" [class]="inputClasses" [attr.minlength]="minLength" [attr.maxlength]="maxLength" [attr.required]="required"/>
+<input [name]="name" [type]="type" inputFocus (onFocus)="onFocusEvent()" (onEmpty)="onEmptyEvent()" (onBlur)="onBlurEvent()" [placeholder]="placeholder" [class]="inputClasses" [attr.minlength]="minLength" [attr.maxlength]="maxLength" [attr.required]="required" [formControl]="control" [style.width]="width"/>

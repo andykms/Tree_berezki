@@ -1,0 +1,27 @@
+<section class="main-page__container" appScrollUp (scrolledUp)="onScrollUp()" (scrolledDown)="onScrollDown()">
+  <header class="main-page__header">
+    <div class="main-page__search-area">
+      <search-ui 
+      placeholder="Найти в tree berezki" 
+      background="dark"
+      width="100%"
+      size="large_20"
+      [maxLength]="32"
+      ></search-ui>
+    </div>
+    <advert-carousel-ui [adverts]="adverts">
+    </advert-carousel-ui>
+  </header>
+  <div class="main-page__product-feed">
+    <product-feed-layout [products]="products" (onLike)="onClickLike($event)" (onAdd)="onClickAdd($event)" (onClick)="onClickProduct($event)" [isLoading]="isLoading" [hasMore]="hasMore" (loadMore)="onLoadMore()"></product-feed-layout>
+    <div class="main-page__button-up">
+      <button-up-ui [visible]="isVisibleButtonUp" (onClick)="onClickButtonUp()"></button-up-ui>
+    </div>
+  </div>
+  <div class="menu__mobile">
+    <menu-mobile-ui></menu-mobile-ui>
+  </div>
+  <div class="menu__desktop">
+    <menu-desktop-ui></menu-desktop-ui>
+  </div>
+</section>

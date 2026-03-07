@@ -1,6 +1,5 @@
 .input__container {
   position: relative;
-  block-size: 50px;
   display: flex;
   flex-direction: column;
 }
@@ -30,6 +29,10 @@
 
 .input__border-on-focus {
   background-color: var(--text);
+}
+
+.error {
+  background-color: var(--danger-text);
 }
 
 .large_24 {

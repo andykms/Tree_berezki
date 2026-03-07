@@ -1,0 +1,38 @@
+<form class="form-email__container" [formGroup]="emailForm" novalidate (ngSubmit)="submit()">
+  <div class="form-email__input form-email__phone">
+    <input-shelf-ui
+      size="large_24"
+      background="dark"
+      type="text"
+      placeholder="Имя"
+      width="350px"
+      [errorMessage]="isInvalidEmail ? '1' : ''"
+      [isPlaceholderOnInput]="isPlaceholderOnEmail"
+    ><input
+      name="name"
+      type="text"
+      inputFocus
+      (onFocus)="onFocusEventName()"
+      (onEmpty)="onEmptyEventName()"
+      (onBlur)="onBlurEventName()"
+      class="input large_24 dark"
+      minlength="1"
+      maxlength="255"
+      [attr.required]="true"
+      formControlName="email"
+    /></input-shelf-ui>
+    @if(isInvalidEmail) {
+      <text-ui type="danger" size="medium_16" back="dark">Некорректное имя</text-ui>
+    }
+  </div>
+  <div class="form-email__input">
+    @if(serverError) {
+    <text-ui type="danger" size="medium_16" back="dark">{{ serverError }}</text-ui>
+    }
+    <button-ui type="primary" form="rounded" [disabled]="isDisabled" (onClick)="submit()">
+      <div class="form-email__submit-button">
+        <text-ui type="main" size="medium_16" back="light" [bold]="true">Продолжить</text-ui>
+      </div>
+    </button-ui>
+  </div>
+</form>

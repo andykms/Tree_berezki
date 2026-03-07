@@ -106,40 +106,63 @@ export class CommentController {
 
   @UseGuards(JwtGuard)
   @Post(':id/reply')
-  async reply(@Param('id') id: string, @Body() replyDto: CreateReplyDto, @Req() req) {
+  async reply(
+    @Param('id') id: string,
+    @Body() replyDto: CreateReplyDto,
+    @Req() req,
+  ) {
     return await this.commentService.reply(id, replyDto, req.user);
   }
 
   @Get(':id/reply')
-  async getReplies(@Param('id') id: string, @Query() query: GetRepliesQueryDto) {
+  async getReplies(
+    @Param('id') id: string,
+    @Query() query: GetRepliesQueryDto,
+  ) {
     return await this.commentService.getReplies(id, query);
   }
 
   @UseGuards(JwtGuard)
   @UseGuards(AccountGuard)
   @Put('reply/:id/likes')
-  async likeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+  async likeReply(
+    @Param('id') id: string,
+    @Body() likeDto: LikeReplyDto,
+    @Req() req,
+  ) {
     return await this.commentService.likeReply(id, likeDto, req.user);
   }
 
   @UseGuards(JwtGuard)
   @UseGuards(AccountGuard)
   @Delete('reply/:id/likes')
-  async unlikeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+  async unlikeReply(
+    @Param('id') id: string,
+    @Body() likeDto: LikeReplyDto,
+    @Req() req,
+  ) {
     return await this.commentService.unlikeReply(id, likeDto, req.user);
   }
 
   @UseGuards(JwtGuard)
   @UseGuards(AccountGuard)
   @Put('reply/:id/dislikes')
-  async dislikeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+  async dislikeReply(
+    @Param('id') id: string,
+    @Body() likeDto: LikeReplyDto,
+    @Req() req,
+  ) {
     return await this.commentService.dislikeReply(id, likeDto, req.user);
   }
 
   @UseGuards(JwtGuard)
   @UseGuards(AccountGuard)
   @Delete('reply/:id/dislikes')
-  async undislikeReply(@Param('id') id: string, @Body() likeDto: LikeReplyDto, @Req() req) {
+  async undislikeReply(
+    @Param('id') id: string,
+    @Body() likeDto: LikeReplyDto,
+    @Req() req,
+  ) {
     return await this.commentService.undislikeReply(id, likeDto, req.user);
   }
 }

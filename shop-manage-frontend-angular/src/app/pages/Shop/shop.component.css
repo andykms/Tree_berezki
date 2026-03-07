@@ -1,0 +1,358 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.shop-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Заголовок магазина */
+.shop-header {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.shop-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  border-radius: 3px;
+}
+
+.shop-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+}
+
+.shop-subtitle {
+  font-size: 1.1rem;
+  color: var(--sub);
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Состояния */
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading-spinner .spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-content,
+.empty-content {
+  max-width: 400px;
+}
+
+.error-icon,
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 1rem;
+}
+
+.retry-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* Основной контент */
+.showcases-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.showcases-header h2 {
+  font-size: 1.8rem;
+  color: var(--text);
+  margin: 0;
+}
+
+.showcases-count {
+  background: var(--primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Сетка групп товаров */
+.showcases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.showcase-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+  border-color: var(--primary);
+}
+
+.showcase-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.showcase-card:hover::before {
+  opacity: 1;
+}
+
+.showcase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.showcase-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.showcase-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  color: white;
+  min-width: 70px;
+  margin-left: 1rem;
+}
+
+.rating-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rating-stars {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.rating-stars .star {
+  display: inline-block;
+  margin: 0 1px;
+}
+
+.showcase-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.shop-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--sub);
+  margin-right: 0.5rem;
+}
+
+.info-value {
+  color: var(--text);
+}
+
+.click-hint {
+  font-size: 0.85rem;
+  color: var(--sub);
+  opacity: 0.7;
+  text-align: right;
+  font-style: italic;
+}
+
+/* Секция создания */
+.create-section {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+.create-btn {
+  background: linear-gradient(135deg, var(--primary), #00cc00);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: var(--radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2);
+}
+
+.create-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 255, 0, 0.3);
+  background: linear-gradient(135deg, var(--primary-hover), #00ff00);
+}
+
+.create-btn:active {
+  transform: translateY(-1px);
+}
+
+.btn-icon {
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .shop-container {
+    padding: 1rem;
+  }
+  
+  .shop-title {
+    font-size: 2rem;
+  }
+  
+  .showcases-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .showcase-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .showcase-rating {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .rating-value {
+    font-size: 1.2rem;
+  }
+  
+  .rating-stars {
+    margin-top: 0;
+  }
+  
+  .create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-title {
+    font-size: 1.75rem;
+  }
+  
+  .showcase-card {
+    padding: 1rem;
+  }
+  
+  .showcase-name {
+    font-size: 1.1rem;
+  }
+  
+  .create-btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+/* Анимация появления карточек */
+.showcase-card {
+  animation: fadeInUp 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.showcase-card:nth-child(1) { animation-delay: 0.1s; }
+.showcase-card:nth-child(2) { animation-delay: 0.2s; }
+.showcase-card:nth-child(3) { animation-delay: 0.3s; }
+.showcase-card:nth-child(4) { animation-delay: 0.4s; }
+.showcase-card:nth-child(5) { animation-delay: 0.5s; }
+.showcase-card:nth-child(6) { animation-delay: 0.6s; }

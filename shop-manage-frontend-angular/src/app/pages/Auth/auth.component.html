@@ -1,0 +1,90 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Заголовок -->
+    
+    <div class="auth-header">
+      <h1 class="auth-title">Вход в систему</h1>
+      <p class="auth-subtitle">Введите ваши данные для входа</p>
+    </div>
+
+    <!-- Форма -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <!-- Поле телефона -->
+      <div class="form-group">
+        <label for="phone" class="form-label">Телефон</label>
+        <input
+          type="tel"
+          id="phone"
+          formControlName="phone"
+          class="form-input"
+          placeholder="+71234567890"
+          [class.invalid]="isFieldInvalid('phone')"
+          autofocus
+          required
+        />
+        
+        <!-- Сообщение об ошибке для телефона -->
+         @if(isFieldInvalid('phone')) {
+        <div class="error-message">
+          {{ getFieldError('phone') }}
+        </div>}
+      </div>
+
+      <!-- Поле пароля -->
+      <div class="form-group">
+        <label for="password" class="form-label">Пароль</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-input"
+          placeholder="Введите пароль"
+          [class.invalid]="isFieldInvalid('password')"
+          required
+        />
+        
+        <!-- Сообщение об ошибке для пароля -->
+        @if(isFieldInvalid('password')) {
+        <div class="error-message">
+          {{ getFieldError('password') }}
+        </div>
+      }
+      </div>
+
+      <!-- Сообщение об ошибке сервера -->
+       @if(serverError()) {
+      <div class="server-error">
+        {{ serverError() }}
+      </div>
+    }
+      <!-- Кнопка отправки -->
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="loginForm.invalid || isLoading()"
+        [class.loading]="isLoading()"
+      >
+      @if(!isLoading()) {
+        <span>Войти</span>
+      } @else{
+        <span class="loading-spinner"></span>
+      }
+      </button>
+
+      
+
+      <!-- Дополнительные ссылки (опционально) -->
+      <div class="auth-links">
+        <a routerLink="/forgot-password" class="auth-link">Забыли пароль?</a>
+        <a routerLink="/register" class="auth-link">Регистрация</a>
+      </div>
+    </form>
+
+    <!-- Футер с информацией -->
+    <div class="auth-footer">
+      <p class="footer-text">
+        Система управления магазинами и аккаунтами
+      </p>
+    </div>
+  </div>
+</div>

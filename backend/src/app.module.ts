@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -16,8 +16,16 @@ import { configuration } from './config/app.config';
 import { QuestionModule } from './question/question.module';
 import { DatabaseModule } from './database/database.module';
 import { dbConfiguration } from './config/db.config';
-import { jwtConfig, IJwtConfig } from './config/jwt.config';
-
+import { jwtConfig } from './config/jwt.config';
+import { SeedsModule } from './database/seeds/seeds.module';
+import { MeasureSeeder } from './database/seeds/measure.seeder';
+import { CategorySeeder } from './database/seeds/category.seeder';
+import { UploadModule } from './upload/upload.module';
+import { FileMoveModule } from './file-move/file-move.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ShowcaseProductsModule } from './showcase-products/showcase-products.module';
+import { ParamModule } from './param/param.module';
+import { MeasureModule } from './measure/measure.module';
 
 @Module({
   imports: [
@@ -33,17 +41,20 @@ import { jwtConfig, IJwtConfig } from './config/jwt.config';
       useFactory: (configService: ConfigService) => {
         const secret = configService.get('JWT_CONFIG.accessTokenSecret');
 
-        const expiresIn = configService.get<string>('JWT_CONFIG.accessTokenExpiresIn');
+        const expiresIn = configService.get<string>(
+          'JWT_CONFIG.accessTokenExpiresIn',
+        );
 
-        if(!secret || !expiresIn) {
+        if (!secret || !expiresIn) {
           throw new Error('JWT_CONFIG is not defined');
         }
 
         return {
-          secret
-        }
-      }
+          secret,
+        };
+      },
     }),
+    ScheduleModule.forRoot(),
     DatabaseModule,
     UserModule,
     AccountModule,
@@ -55,8 +66,27 @@ import { jwtConfig, IJwtConfig } from './config/jwt.config';
     BasketModule,
     AuthModule,
     QuestionModule,
+    SeedsModule,
+    UploadModule,
+    FileMoveModule,
+    ShowcaseProductsModule,
+    ParamModule,
+    MeasureModule,
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  constructor(
+    private readonly measureSeeder: MeasureSeeder,
+    private readonly categorySeeder: CategorySeeder,
+  ) {}
+
+  async onApplicationBootstrap() {
+    // Запускаем сидинг только в development режиме
+    if (process.env.NODE_ENV !== 'production') {
+      await this.measureSeeder.seed();
+      await this.categorySeeder.seed();
+    }
+  }
+}

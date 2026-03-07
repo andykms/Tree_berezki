@@ -1,0 +1,38 @@
+.advert-carousel__container {
+  inline-size: 95vw;
+  min-block-size: max-content;
+  overflow-x:hidden;
+  overflow-y: hidden;
+}
+
+.advert-carousel__track {
+  display: flex;
+  align-items: center;
+  transition: transform 1s ease-in-out;
+}
+
+.advert-carousel__item {
+  inline-size: 350px;
+  block-size: 117px;
+  border-radius: var(--standart-radius);
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.advert-carousel__item--inactive {
+  transform: scale(0.95);
+  opacity: 0.5;
+}
+
+.advert-carousel__item--active {
+  opacity: 1;
+}
+
+
+@media (width >= 768px) {
+  .advert-carousel__item {
+    inline-size: 615px;
+    block-size: 265px;
+  }
+}

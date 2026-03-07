@@ -1,3 +1,9 @@
+
+
+
+<!--
+<advert-carousel-ui [adverts]="adverts"></advert-carousel-ui>
+
 <main-card-layout
   [images]="images"
   [title]="'Зубочистка'"
@@ -12,12 +18,6 @@
   (onLike)="onLike()"
   (onAdd)="onAdd()"
 ></main-card-layout>
-<input-shelf-ui
-  width="300px"
-  placeholder="Имя, например, Андрей"
-  [hasPlaceholderOnInput]="true"
-></input-shelf-ui>
-<input-code-ui [formControlNames]="formControlNames"></input-code-ui>
 <select-dropdown-ui
   [options]="options"
   (onChange)="onChangeDropdown($event)"
@@ -43,3 +43,19 @@
 <div [style.width]="commentWidth">
   <comment-layout [comment]="comment" [isLiked]="commentIsLiked" [isDisliked]="commentIsDisliked" [shopReply]="shopReply" [options]="commentOptions" (onLike)="commentOnLike()" (onDislike)="commentOnDislike()" (onClickReply)="commentOnReply()"></comment-layout>
 </div>
+
+
+<form-create-password-layout (onSubmit)="onSubmitFormCreatePassword($event)" [serverError]="serverError">
+</form-create-password-layout>
+-->
+<main-page 
+[products]="products" 
+[adverts]="adverts" 
+(onLike)="onLikeProduct($event)"
+(onAdd)="onAddProduct($event)"
+(onClick)="onClickProduct($event)"
+(onSearch)="onSearchProduct($event)"
+[isLoading]="isLoading"
+[hasMore]="hasMore"
+(loadMore)="loadMore()"
+()></main-page>

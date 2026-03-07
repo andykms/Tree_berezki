@@ -3,8 +3,10 @@
     <button-like-ui [isLiked]="isLiked" type="small" (onClick)="toggleLike()"></button-like-ui>
   </div>
   <div class="main-card__image-section">
-    <image-carousel-ui [images]="images" imageWidth="200px" imageHeight="267px" windowWidth="200px" windowHeight="277px" type="base" form="rounded">
-    </image-carousel-ui>
+    <div class="main-card__image-carousel">
+      <image-carousel-ui [images]="images" imageWidth="100%" imageHeight="100%" windowWidth="100%" windowHeight="100%" type="base" form="rounded">
+      </image-carousel-ui>
+    </div>
     <position-dots-ui
       [count]="countImages"
       [active]="activeImage"

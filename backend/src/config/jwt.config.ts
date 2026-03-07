@@ -3,8 +3,7 @@ import type { StringValue } from 'ms';
 
 export const jwtConfig = registerAs('JWT_CONFIG', () => ({
   refreshTokenSecret:
-    process.env.REFRESH_SECRET_TOKEN ||
-    '09g35g$*(HF*($#!@3ngg5iUbiub&#&*GT#&@T',
+    process.env.REFRESH_SECRET_TOKEN || '434583453403h4g35bg85h9wh58g4wblg54',
   accessTokenSecret:
     process.env.ACCESS_SECRET_TOKEN || '08gn90ngs90j340gjsponbo',
   refreshTokenExpiresIn: (process.env.REFRESH_SECRET_EXPIRES_IN ||

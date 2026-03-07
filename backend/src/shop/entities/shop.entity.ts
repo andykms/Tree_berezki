@@ -5,14 +5,19 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany
+  ManyToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import { User } from '../../user/entities/user.entity';
-import { ShowcaseProducts } from './showcase-products.entity';
+import { ShowcaseProducts } from '../../showcase-products/entities/showcase-products.entity';
 import { Account } from '../../account/entities/account.entity';
 
+export enum EShopStatus {
+  work = 'work',
+  blocked = 'blocked',
+  deleted = 'deleted',
+}
 
 @Entity()
 export class Shop {
@@ -78,16 +83,17 @@ export class Shop {
 
   @Column({
     type: 'enum',
-    enum: ['work', 'blocked', 'deleted'],
-    default: 'work',
+    enum: EShopStatus,
+    default: EShopStatus.work,
   })
-  status: 'work' | 'blocked' | 'deleted';
+  status: EShopStatus;
 
   @OneToMany(
     () => ShowcaseProducts,
     (showcaseProducts) => showcaseProducts.shop,
     { onDelete: 'CASCADE' },
   )
+  @Exclude()
   showcaseProducts: ShowcaseProducts[];
 
   @ManyToMany(() => Account, (account) => account.shopLikes)

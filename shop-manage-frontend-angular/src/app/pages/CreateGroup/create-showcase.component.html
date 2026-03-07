@@ -1,0 +1,81 @@
+<div class="create-showcase-container">
+  <div class="create-showcase-card">
+    <!-- Заголовок -->
+    <div class="create-showcase-header">
+      <button class="back-button" (click)="goBack()" title="Назад">
+        <span class="back-icon">←</span>
+      </button>
+      <h1 class="create-showcase-title">Создание группы товаров</h1>
+      <p class="create-showcase-subtitle">Введите название новой группы</p>
+    </div>
+
+    <!-- Форма -->
+    <form [formGroup]="showcaseForm" (ngSubmit)="onSubmit()" class="create-showcase-form" novalidate>
+      <!-- Поле названия -->
+      <div class="form-group">
+        <label for="name" class="form-label">Название группы <span class="required">*</span></label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-input"
+          placeholder="Введите название группы"
+          [class.invalid]="isFieldInvalid('name')"
+          autofocus
+        />
+        @if(isFieldInvalid('name')) {
+          <div class="error-message">
+            @if(name?.errors?.['required']) {
+              Название обязательно
+            } @else if(name?.errors?.['minlength']) {
+              Минимальная длина: {{ name?.errors?.['minlength'].requiredLength }} символов
+            } @else if(name?.errors?.['maxlength']) {
+              Максимальная длина: {{ name?.errors?.['maxlength'].requiredLength }} символов
+            }
+          </div>
+        }
+        <div class="input-hint">Придумайте понятное название для группы товаров</div>
+      </div>
+
+      <!-- Сообщение об ошибке сервера -->
+      @if(serverError()) {
+        <div class="server-error">
+          {{ serverError() }}
+        </div>
+      }
+
+      <!-- Кнопки -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="goBack()"
+          [disabled]="isLoading()"
+        >
+          Отмена
+        </button>
+        
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="showcaseForm.invalid || isLoading()"
+          [class.loading]="isLoading()"
+        >
+          @if(!isLoading()) {
+            <span>Создать группу</span>
+          } @else {
+            <span class="loading-spinner"></span>
+          }
+        </button>
+      </div>
+    </form>
+
+    <!-- Информационное сообщение -->
+    <div class="info-box">
+      <h4 class="info-title">💡 Подсказка</h4>
+      <p class="info-text">
+        Группы товаров помогают структурировать ваш каталог. Например: "Одежда", "Электроника", "Книги".
+      </p>
+    </div>
+  </div>
+</div>

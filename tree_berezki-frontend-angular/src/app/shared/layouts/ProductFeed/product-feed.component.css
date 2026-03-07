@@ -1,0 +1,37 @@
+.virtual-scroll__container {
+  padding: 10px;
+}
+
+.virtual-scroll {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: 10px;
+  inline-size: 100%;
+  justify-items: center;
+}
+
+@media (width >= 768px) {
+  .virtual-scroll {
+    grid-gap: 20px;
+  }
+
+  .virtual-scroll__container {
+    padding: 10px 50px;
+  }
+}
+
+@media (width >= 467px) {
+  .virtual-scroll {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (width >= 1024px) {
+  .virtual-scroll {
+    grid-gap: 30px;
+  }
+
+  .virtual-scroll__container {
+    padding: 10px 200px;
+  }
+}

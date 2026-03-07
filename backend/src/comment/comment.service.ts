@@ -58,7 +58,7 @@ export class CommentService {
 
     const images: CommentImage[] = [];
 
-    for(const imageDto of createCommentDto.images){
+    for (const imageDto of createCommentDto.images) {
       const image = await this.commentImageRepository.create({
         url: imageDto.path,
       });
@@ -84,11 +84,9 @@ export class CommentService {
 
     const queryBuilder = this.commentRepository.createQueryBuilder('comment');
 
-
     queryBuilder.andWhere('comment.product = :product', {
       product,
     });
-
 
     if (query.withImage) {
       queryBuilder.andWhere('comment.images.length > 0');
@@ -123,7 +121,6 @@ export class CommentService {
       .skip((Number(query.page) - 1) * Number(query.limit))
       .take(Number(query.limit));
 
-
     queryBuilder.leftJoinAndSelect('comment.images.', 'images');
 
     const comments = await queryBuilder.getMany();
@@ -135,23 +132,35 @@ export class CommentService {
   }
 
   async findOne(id: string) {
-    return await this.commentRepository.findOne({ where: { id }, relations: ['images'] });
+    return await this.commentRepository.findOne({
+      where: { id },
+      relations: ['images'],
+    });
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto) {
-    return await this.commentRepository.update(id, updateCommentDto);
+    const comment = await this.commentRepository.findOneOrFail({
+      where: { id },
+    });
+    const newComment = this.commentRepository.merge(comment, updateCommentDto);
+    return await this.commentRepository.save(newComment);
   }
 
   async remove(id: string, user: User) {
-    const comment = await this.commentRepository.findOneOrFail({ where: { id ,account: {user}} });
-    return await this.commentRepository.delete({id, account: {user}});
+    const comment = await this.commentRepository.findOneOrFail({
+      where: { id, account: { user } },
+    });
+    await this.commentRepository.remove(comment);
+    return comment;
   }
 
   async like(id: string, likeDto: LikeCommentDto, user: User) {
     const account = user.accounts.find(
       (account) => account.id === likeDto.accountId,
     );
-    const comment = await this.commentRepository.findOneOrFail({ where: { id } });
+    const comment = await this.commentRepository.findOneOrFail({
+      where: { id },
+    });
 
     if (comment.likes.some((like) => like.account.id == likeDto.accountId)) {
       throw new BadRequestException('лайк/дизлайк уже поставлен');
@@ -174,7 +183,9 @@ export class CommentService {
     const account = user.accounts.find(
       (account) => account.id === likeDto.accountId,
     );
-    const comment = await this.commentRepository.findOneOrFail({ where: { id } });
+    const comment = await this.commentRepository.findOneOrFail({
+      where: { id },
+    });
 
     const like = await this.commentLikeRepository.findOneOrFail({
       where: {
@@ -183,7 +194,6 @@ export class CommentService {
         comment,
       },
     });
-
 
     await this.commentLikeRepository.delete(like.id);
 
@@ -197,7 +207,9 @@ export class CommentService {
     const account = user.accounts.find(
       (account) => account.id === likeDto.accountId,
     );
-    const comment = await this.commentRepository.findOneOrFail({ where: { id } });
+    const comment = await this.commentRepository.findOneOrFail({
+      where: { id },
+    });
 
     if (comment.likes.some((like) => like.account.id == likeDto.accountId)) {
       throw new BadRequestException('лайк/дизлайк уже поставлен');
@@ -211,7 +223,6 @@ export class CommentService {
 
     await this.commentLikeRepository.save(dislike);
 
-
     comment.dislikes_count += 1;
     await this.commentRepository.save(comment);
 
@@ -222,7 +233,9 @@ export class CommentService {
     const account = user.accounts.find(
       (account) => account.id === likeDto.accountId,
     );
-    const comment = await this.commentRepository.findOneOrFail({ where: { id } });
+    const comment = await this.commentRepository.findOneOrFail({
+      where: { id },
+    });
     const dislike = await this.commentLikeRepository.findOneOrFail({
       where: {
         account,
@@ -230,7 +243,6 @@ export class CommentService {
         comment,
       },
     });
-
 
     comment.dislikes_count -= 1;
     await this.commentRepository.save(comment);
@@ -241,15 +253,19 @@ export class CommentService {
   }
 
   async reply(commentId: string, replyDto: CreateReplyDto, user: User) {
-    const comment = await this.commentRepository.findOneOrFail({where: {id: commentId}});
+    const comment = await this.commentRepository.findOneOrFail({
+      where: { id: commentId },
+    });
 
-    const account = user.accounts.find((account) => account.id === replyDto.accountId);
+    const account = user.accounts.find(
+      (account) => account.id === replyDto.accountId,
+    );
 
     const reply = await this.replyRepository.create({
       ...replyDto,
       comment,
       account,
-      parent_id: replyDto.replyId || ""
+      parent_id: replyDto.replyId || '',
     });
 
     await this.replyRepository.save(reply);
@@ -260,18 +276,25 @@ export class CommentService {
   async getReplies(commentId: string, query: GetRepliesQueryDto) {
     const limit = Number(query.limit);
     const page = Number(query.page);
-    const replies = await this.replyRepository.find({where: {comment: {id: commentId}}, order: {created_at: 'DESC'}, take: limit, skip: page * limit});
+    const replies = await this.replyRepository.find({
+      where: { comment: { id: commentId } },
+      order: { created_at: 'DESC' },
+      take: limit,
+      skip: page * limit,
+    });
 
     return {
       items: replies,
-      total: replies.length
+      total: replies.length,
     };
   }
 
   async likeReply(id: string, likeDto: LikeReplyDto, user: User) {
-    const reply = await this.replyRepository.findOneOrFail({where: {id}});
+    const reply = await this.replyRepository.findOneOrFail({ where: { id } });
 
-    const account = user.accounts.find((account) => account.id === likeDto.accountId);
+    const account = user.accounts.find(
+      (account) => account.id === likeDto.accountId,
+    );
 
     if (reply.likes.some((like) => like.account.id == likeDto.accountId)) {
       throw new BadRequestException('лайк/дизлайк уже поставлен');
@@ -280,7 +303,7 @@ export class CommentService {
     const like = await this.replyLikeRepository.create({
       account,
       reply,
-      type: ETypeLikes.LIKE
+      type: ETypeLikes.LIKE,
     });
 
     reply.likes_count += 1;
@@ -292,11 +315,15 @@ export class CommentService {
   }
 
   async unlikeReply(id: string, likeDto: LikeReplyDto, user: User) {
-    const reply = await this.replyRepository.findOneOrFail({where: {id}});
+    const reply = await this.replyRepository.findOneOrFail({ where: { id } });
 
-    const account = user.accounts.find((account) => account.id === likeDto.accountId);
+    const account = user.accounts.find(
+      (account) => account.id === likeDto.accountId,
+    );
 
-    const like = await this.replyLikeRepository.findOneOrFail({where: {account, reply, type: ETypeLikes.LIKE}});
+    const like = await this.replyLikeRepository.findOneOrFail({
+      where: { account, reply, type: ETypeLikes.LIKE },
+    });
 
     await this.replyLikeRepository.delete(like.id);
 
@@ -307,9 +334,11 @@ export class CommentService {
   }
 
   async dislikeReply(id: string, likeDto: LikeReplyDto, user: User) {
-    const reply = await this.replyRepository.findOneOrFail({where: {id}});
+    const reply = await this.replyRepository.findOneOrFail({ where: { id } });
 
-    const account = user.accounts.find((account) => account.id === likeDto.accountId);
+    const account = user.accounts.find(
+      (account) => account.id === likeDto.accountId,
+    );
 
     if (reply.likes.some((like) => like.account.id == likeDto.accountId)) {
       throw new BadRequestException('лайк/дизлайк уже поставлен');
@@ -318,7 +347,7 @@ export class CommentService {
     const like = await this.replyLikeRepository.create({
       account,
       reply,
-      type: ETypeLikes.DISLIKE
+      type: ETypeLikes.DISLIKE,
     });
 
     reply.dislikes_count += 1;
@@ -330,17 +359,21 @@ export class CommentService {
   }
 
   async undislikeReply(id: string, likeDto: LikeReplyDto, user: User) {
-    const reply = await this.replyRepository.findOneOrFail({where: {id}});
+    const reply = await this.replyRepository.findOneOrFail({ where: { id } });
 
-    const account = user.accounts.find((account) => account.id === likeDto.accountId);
+    const account = user.accounts.find(
+      (account) => account.id === likeDto.accountId,
+    );
 
-    const dislike = await this.replyLikeRepository.findOneOrFail({where: {account, reply, type: ETypeLikes.DISLIKE}});
+    const dislike = await this.replyLikeRepository.findOneOrFail({
+      where: { account, reply, type: ETypeLikes.DISLIKE },
+    });
 
     await this.replyLikeRepository.delete(dislike.id);
 
     reply.dislikes_count -= 1;
     await this.replyRepository.save(reply);
 
-    return reply; 
+    return reply;
   }
 }

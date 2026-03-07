@@ -1,4 +1,10 @@
-import { ManyToOne, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  ManyToOne,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+} from 'typeorm';
 import { Comment } from './comment.entity';
 import { Account } from '../../account/entities/account.entity';
 import { ReplyLike } from './reply-likes.entity';
@@ -23,7 +29,9 @@ export class Reply {
   @ManyToOne(() => Account, (account) => account.replies)
   account: Account;
 
-  @OneToMany(() => ReplyLike, (replyLike) => replyLike.reply, {onDelete: 'CASCADE'})
+  @OneToMany(() => ReplyLike, (replyLike) => replyLike.reply, {
+    onDelete: 'CASCADE',
+  })
   likes: ReplyLike[];
 
   @Column({
@@ -42,7 +50,7 @@ export class Reply {
   dislikes_count: number;
 
   @Column({
-    default: "",
+    default: '',
   })
   parent_id: string;
 }

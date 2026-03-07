@@ -1,4 +1,7 @@
 .img__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .rounded {
@@ -23,18 +26,20 @@
   top: 0;
   left: 0;
   width: 50%;
-  height: 200%;
+  height: 500%;
   background-color: var(--secondary-back);
   box-shadow: 25px 0 15px var(--secondary-back), -25px 0 15px var(--secondary-back);
   animation: spin 1.5s linear infinite;
-  rotate: 60deg;
+  transform-origin: 50% 50%;
 }
 
 @keyframes spin {
   0% {
+    transform: translateY(50%);
     transform: translateX(-300%);
   }
   100% {
+    transform: translateY(-50%);
     transform: translateX(300%);
   }
 }

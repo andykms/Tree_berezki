@@ -10,21 +10,26 @@ import { Product } from '../product/entities/product.entity';
 
 @Injectable()
 export class QuestionService {
-
   constructor(
-    @InjectRepository(Question) private readonly questionRepository: Repository<Question>,
-    @InjectRepository(Product) private readonly productRepository: Repository<Product>
+    @InjectRepository(Question)
+    private readonly questionRepository: Repository<Question>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
   ) {}
 
   async create(createQuestionDto: CreateQuestionDto, user: User) {
-    const account = user.accounts.find(account => account.id === createQuestionDto.accountId);
-    
-    const product = await this.productRepository.findOneOrFail({where: {id: createQuestionDto.productId}});
+    const account = user.accounts.find(
+      (account) => account.id === createQuestionDto.accountId,
+    );
+
+    const product = await this.productRepository.findOneOrFail({
+      where: { id: createQuestionDto.productId },
+    });
 
     const question = await this.questionRepository.create({
       ...createQuestionDto,
       product,
-      account
+      account,
     });
 
     return await this.questionRepository.save(question);
@@ -34,16 +39,25 @@ export class QuestionService {
     const limit = Number(getQuestionQueryDto.limit);
     const page = Number(getQuestionQueryDto.page);
 
-    const questions = await this.questionRepository.find({where: {product: {id: getQuestionQueryDto.productId}}, relations: {account: true}, take: limit, skip: limit * page, order: {created_at: 'DESC'}});
+    const questions = await this.questionRepository.find({
+      where: { product: { id: getQuestionQueryDto.productId } },
+      relations: { account: true },
+      take: limit,
+      skip: limit * page,
+      order: { created_at: 'DESC' },
+    });
 
     return {
       items: questions,
-      total: questions.length
-    }
+      total: questions.length,
+    };
   }
 
   async findOne(id: string) {
-    return await this.questionRepository.findOneOrFail({where: {id}, relations: {account: true}});
+    return await this.questionRepository.findOneOrFail({
+      where: { id },
+      relations: { account: true },
+    });
   }
 
   update(id: string, updateQuestionDto: UpdateQuestionDto) {
@@ -51,8 +65,10 @@ export class QuestionService {
   }
 
   async remove(id: string, user: User) {
-    const question = await this.questionRepository.findOneOrFail({where: {id, account: {user}}});
-    await this.questionRepository.delete({id, account: {user}});
+    const question = await this.questionRepository.findOneOrFail({
+      where: { id, account: { user } },
+    });
+    await this.questionRepository.delete({ id, account: { user } });
     return question;
   }
 }

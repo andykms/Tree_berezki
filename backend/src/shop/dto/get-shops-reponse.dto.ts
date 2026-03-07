@@ -1,4 +1,4 @@
-import { IGetShopResponse } from "./get-shop-response.dto";
+import { IGetShopResponse } from './get-shop-response.dto';
 
 export class GetShopsResponseDto {
   items: IGetShopResponse[];

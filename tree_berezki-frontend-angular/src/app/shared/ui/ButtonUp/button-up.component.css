@@ -1,8 +1,24 @@
 .button-up__container {
+  animation: up 0.15s ease-in-out;
+}
+
+.button-up {
   border-radius: 50%;
   block-size: 60px;
   inline-size: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@keyframes up {
+  from {
+    transform: scale(0) rotateZ(180deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1;
+  }
 }

@@ -1,0 +1,15 @@
+:root {
+  --primary: #00ff00;
+  --primary-hover: #95ff95;
+  --text: #333333;
+  --sub: #6c757d;
+  --danger: #e63946;
+  --background: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #dee2e6;
+  --border-focus: #4361ee;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+  --transition: all 0.3s ease;
+  --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

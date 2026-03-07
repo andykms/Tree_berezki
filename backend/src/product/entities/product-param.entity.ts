@@ -1,6 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Product } from './product.entity';
-import { Param } from './param.entity';
+import { Param } from '../../param/entities/param.entity';
 
 @Entity()
 export class ProductParam {
@@ -14,5 +20,6 @@ export class ProductParam {
   product: Product;
 
   @ManyToOne(() => Param, (param) => param.productParams)
+  @JoinColumn()
   param: Param;
 }

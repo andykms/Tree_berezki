@@ -1,4 +1,4 @@
-import { EProductStatus } from "../entities/product.entity";
+import { EProductStatus } from '../entities/product.entity';
 
 export interface IGetProductParamResponse {
   id: string;

@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UserService } from '../user/user.service';
 import { LocalGuard } from './guards/local.guard';
-import { RefreshGuard } from './guards/refreshToken.guard';
+import { JwtRefreshGuard } from './guards/refreshToken.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,43 +28,41 @@ export class AuthController {
     @Ip() ip,
   ) {
     const user = await this.usersService.create(createAuthDto);
-    //console.log("USER", user);
     const userAgent = req.headers['user-agent'];
-    //console.log("USER AGENT", userAgent);
-    //console.log("IP", ip);
     const tokens = await this.authService.auth(user, res, ip, userAgent);
-    return res.json(tokens);
+    res.json(tokens);
   }
 
   @UseGuards(LocalGuard)
   @Post('login')
   async login(@Req() req, @Res() res, @Ip() ip) {
     const userAgent = req.headers['user-agent'];
-    return await this.authService.auth(req.user, res, ip, userAgent);
+    const tokens = await this.authService.auth(req.user, res, ip, userAgent);
+    res.json(tokens);
   }
 
-  @UseGuards(RefreshGuard)
+  @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   async refresh(@Req() req) {
     await this.authService.verifyAllTokens(req.user);
     return await this.authService.refresh(req.user);
   }
 
-  @UseGuards(RefreshGuard)
+  @UseGuards(JwtRefreshGuard)
   @Post('logout')
   async logout(@Req() req, @Res() res) {
     await this.authService.logout(req.refreshToken, req.user, res);
-    return {
+    res.json({
       message: 'ok',
-    };
+    });
   }
 
-  @UseGuards(RefreshGuard)
+  @UseGuards(JwtRefreshGuard)
   @Post('logoutAll')
   async logoutAll(@Req() req, @Res() res) {
     await this.authService.logoutAll(req.user, res);
-    return {
+    return res.json({
       message: 'ok',
-    };
+    });
   }
 }

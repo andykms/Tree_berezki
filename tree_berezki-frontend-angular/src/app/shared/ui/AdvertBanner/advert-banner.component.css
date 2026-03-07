@@ -1,0 +1,16 @@
+.advert-banner__container {
+  position: relative;
+}
+
+.advert-banner__about-container {
+  position: absolute;
+  inset-inline-end: 5px;
+  inset-block-end: 5px;
+  z-index: 1;
+}
+
+.advert-banner__link {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}

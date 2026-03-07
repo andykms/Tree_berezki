@@ -1,13 +1,12 @@
 import * as dotenv from 'dotenv';
 import { ConfigType, registerAs } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import {join} from "path"
 import { User } from '../user/entities/user.entity';
 import { Shop } from '../shop/entities/shop.entity';
-import { ShowcaseProducts } from '../shop/entities/showcase-products.entity';
+import { ShowcaseProducts } from '../showcase-products/entities/showcase-products.entity';
 import { Question } from '../question/entities/question.entity';
-import { Measure } from '../product/entities/measure.entity';
-import { Param } from '../product/entities/param.entity';
+import { Measure } from '../measure/entities/measure.entity';
+import { Param } from '../param/entities/param.entity';
 import { ProductImage } from '../product/entities/product-image.entity';
 import { ProductParam } from '../product/entities/product-param.entity';
 import { Product } from '../product/entities/product.entity';
@@ -19,7 +18,6 @@ import { Comment } from '../comment/entities/comment.entity';
 import { ReplyLike } from '../comment/entities/reply-likes.entity';
 import { Reply } from '../comment/entities/reply.entity';
 import { Category } from '../category/entities/category.entity';
-import { RequiredParam } from '../category/entities/required-param.entity';
 import { Basket } from '../basket/entities/basket.entity';
 import { Account } from '../account/entities/account.entity';
 
@@ -52,7 +50,6 @@ export const dbConfiguration = registerAs(
       ReplyLike,
       Reply,
       Category,
-      RequiredParam,
       Basket,
       Account,
     ],

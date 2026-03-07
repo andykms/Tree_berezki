@@ -17,6 +17,11 @@ import {
   TBasketProduct,
 } from './shared/layouts/BasketProduct/basket-product.component';
 import { CommentComponent, TComment } from './shared/layouts/Comment/comment.component';
+import { FormLoginComponent } from './shared/layouts/FormLogin/form-login.component';
+import { FormCreatePasswordComponent } from './shared/layouts/FormCreatePassword/form-create-password.component';
+import { AdvertCarouselComponent } from './shared/ui/AdvertCarousel/advert-carousel.component';
+import { MainComponent } from './pages/Main/main.component';
+import { mockProducts } from './core/utils/mock-products';
 
 @Component({
   imports: [
@@ -29,11 +34,93 @@ import { CommentComponent, TComment } from './shared/layouts/Comment/comment.com
     BasketProductComponent,
     RouterLink,
     CommentComponent,
+    FormLoginComponent,
+    FormCreatePasswordComponent,
+    AdvertCarouselComponent,
+    MainComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent {
+
+  currIndex = 10;
+
+  products = mockProducts.slice(0, this.currIndex);
+
+  adverts = [
+    {
+      organization: 'ПАО Берибанк',
+      INN: '7707083893',
+      link: '/',
+      src: 'https://i.pinimg.com/originals/ca/9a/12/ca9a123b7269fba0574726629bad42b9.jpg',
+    },
+    {
+      organization: 'ООО КибоБР',
+      INN: '5523083893',
+      link: '/',
+      src: 'https://i.pinimg.com/originals/42/68/7e/42687eab36aac1e51c36c910b01ac64f.jpg',
+    },
+    {
+      organization: 'ООО Тмыв',
+      INN: '55765838452',
+      link: '/',
+      src: 'https://i.pinimg.com/originals/6a/d6/d8/6ad6d8fdff9b1e47e4423011c66c413b.jpg',
+    },
+    {
+      organization: 'ООО Лух',
+      INN: '55765838452',
+      link: '/',
+      src: 'https://i.pinimg.com/originals/c7/dd/22/c7dd22b588ca841e83b5a04240d04795.jpg',
+    },
+    {
+      organization: 'ООО Первоцвет',
+      INN: '55765838452',
+      link: '/',
+      src: 'https://images.wallpaperscraft.ru/image/single/fon_abstraktsiia_sinij_1308170_3840x2400.jpg',
+    },
+  ];
+
+  onLikeProduct = (product: { id: string }) => {
+    this.products = this.products.map((p) => ({
+      ...p,
+      isLiked: p.id === product.id ? !p.isLiked : p.isLiked,
+    }));
+  };
+
+  onAddProduct = (product: { id: string }) => {};
+
+  onClickProduct = (product: { id: string }) => {};
+
+  onSearchProduct = (query: string) => {};
+
+  loadMore = () => {
+    this.currIndex += 10;
+    if(this.currIndex > mockProducts.length) {
+      return;
+    }
+    this.products = mockProducts.slice(0, this.currIndex);
+  }
+
+  get hasMore() {
+    return mockProducts.length > this.products.length;
+  }
+
+  get isLoading() {
+    return false;
+  }
+
+  onSubmitFormCreatePassword = (form: { password: string }) => {};
+  createPasswordServerError = '';
+
+  serverError = '';
+
+  onSubmitFormLogin = (form: { phone: string; password: string }) => {
+    if (form.password !== '123456') {
+      this.serverError = 'Неверный логин/пароль';
+    }
+  };
+
   comment: TComment = {
     id: 'ioogn34g',
     advantage:
@@ -48,41 +135,48 @@ export class AppComponent {
     date: new Date('2019-01-15'),
     senderName: 'Александр Петров',
     images: [
-      { src: 'https://feedback-03.wbbasket.ru/6e81b5c4-0662-48d7-b7ff-08c7ebf7c4f2/ms.webp', alt: 'Фото товара 1' },
-      { src: 'https://feedback-01.wbbasket.ru/699e1d96-1ba4-4644-9bdf-51b0901f021f/ms.webp', alt: 'Фото товара 2' },
+      {
+        src: 'https://feedback-03.wbbasket.ru/6e81b5c4-0662-48d7-b7ff-08c7ebf7c4f2/ms.webp',
+        alt: 'Фото товара 1',
+      },
+      {
+        src: 'https://feedback-01.wbbasket.ru/699e1d96-1ba4-4644-9bdf-51b0901f021f/ms.webp',
+        alt: 'Фото товара 2',
+      },
     ],
-    productImageSrc: 'https://via.placeholder.com/80',
+    productImageSrc:
+      'https://ekt-basket-cdn-08.geobasket.ru/vol2212/part221290/221290689/images/big/1.webp',
     choosenParams: [
       { name: 'Цвет', value: 'Черный' },
       { name: 'Размер', value: 'XL' },
       { name: 'Материал', value: 'Хлопок' },
     ],
   };
-  commentWidth = "600px";
+  commentWidth = '600px';
   commentIsLiked = false;
   commentIsDisliked = false;
-  shopReply = 'Здравствуйте! Нам очень жаль, что Вы столкнулись с подобными проблемами при использовании данной модели. Надеемся, следующие покупки будут приятными. С уважением, Илья, команда Спортмастер.';
-  commentOptions = ["Пожаловаться"];
+  shopReply =
+    'Здравствуйте! Нам очень жаль, что Вы столкнулись с подобными проблемами при использовании данной модели. Надеемся, следующие покупки будут приятными. С уважением, Илья, команда Спортмастер.';
+  commentOptions = ['Пожаловаться'];
   commentOnLike = () => {
     this.commentIsLiked = !this.commentIsLiked;
-    if(this.commentIsLiked) {
+    if (this.commentIsLiked) {
       this.commentIsDisliked = false;
     }
-  }
+  };
 
   commentOnDislike = () => {
     this.commentIsDisliked = !this.commentIsDisliked;
-    if(this.commentIsDisliked) {
+    if (this.commentIsDisliked) {
       this.commentIsLiked = false;
     }
-  }
+  };
 
-  commentOnReply = () => {}
+  commentOnReply = () => {};
 
   onClickCommentOption = (comment: TComment, option: number) => {
     alert(this.commentOptions[option]);
-  }
-
+  };
 
   basketWidth = '70%';
 

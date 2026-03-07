@@ -1,0 +1,19 @@
+<article class="advert-carousel__container">
+  <div class="advert-carousel__track" [style.transform]="position">
+    <!--@if(isActiveFirst) {
+      <div [class]="bannerClasses(1)">
+        <advert-banner-ui [advert]="lastAdvert" [src]="lastAdvert.src" [link]="lastAdvert.link" width="100%" height="100%"></advert-banner-ui>
+      </div>
+    }-->
+    @for(advert of adverts; track $index) {
+      <div [class]="bannerClasses($index)">
+        <advert-banner-ui [advert]="advert" [src]="advert.src" [link]="advert.link" width="100%" height="100%"></advert-banner-ui>
+      </div>
+    }
+    <!--@if(isActiveLast) {
+      <div [class]="bannerClasses(1)">
+        <advert-banner-ui [advert]="adverts[0]" [src]="adverts[0].src" [link]="adverts[0].link" width="100%" height="100%"></advert-banner-ui>
+      </div>
+    }-->
+  </div>
+</article>

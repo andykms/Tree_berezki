@@ -8,6 +8,7 @@ import { DateFormatPipe } from '../../pipes/date-format.pipe';
 import { CountFormatPipe } from '../../pipes/count-format.pipe';
 import { TextDropdownComponent } from '../../ui/TextDropdown/text-dropdown.component';
 import { ImageCarouselComponent } from '../../ui/ImageCarousel/image-carousel.component';
+import { ImageComponent } from '../../ui/Image/image.component';
 
 export type TCommentType = 'base' | 'empty';
 
@@ -47,6 +48,7 @@ export type TComment = {
     CountFormatPipe,
     TextDropdownComponent,
     ImageCarouselComponent,
+    ImageComponent,
   ],
   selector: 'comment-layout',
   templateUrl: './comment.component.html',
@@ -145,5 +147,9 @@ export class CommentComponent {
 
   get textLikes() {
     return this.comment.likes.toString();
+  }
+
+  get hasProductChoosenParams() {
+    return this.comment.choosenParams.length > 0;
   }
 }

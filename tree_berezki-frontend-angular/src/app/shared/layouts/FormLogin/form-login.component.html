@@ -1,0 +1,64 @@
+<form class="form-login__container" [formGroup]="loginForm" novalidate (ngSubmit)="submit()">
+  <div class="form-login__input form-login__phone">
+    <input-shelf-ui
+      size="large_24"
+      background="dark"
+      type="text"
+      placeholder="Телефон"
+      width="350px"
+      [errorMessage]="isInvalidPhone ? '1' : ''"
+      [isPlaceholderOnInput]="isPlaceholderOnPhone"
+    ><input
+      name="phone"
+      type="text"
+      inputFocus
+      (onFocus)="onFocusEventPhone()"
+      (onEmpty)="onEmptyEventPhone()"
+      (onBlur)="onBlurEventPhone()"
+      class="input large_24 dark"
+      minlength="1"
+      maxlength="255"
+      [attr.required]="true"
+      formControlName="phone"
+    /></input-shelf-ui>
+    @if(isInvalidPhone) {
+    <text-ui type="danger" size="medium_16" back="dark">Введите телефон</text-ui>
+    }
+  </div>
+  <div class="form-login__input form-login__password">
+    <input-shelf-ui
+      background="dark"
+      placeholder="Пароль"
+      width="350px"
+      [errorMessage]="isInvalidPassword ? '1' : ''"
+      name="password"
+      [isPlaceholderOnInput]="isPlaceholderOnPassword"
+      ><input
+        name="password"
+        type="password"
+        inputFocus
+        (onFocus)="onFocusEventPassword()"
+        (onEmpty)="onEmptyEventPassword()"
+        (onBlur)="onBlurEventPassword()"
+        class="input large_24 dark"
+        minlength="1"
+        maxlength="255"
+        [attr.required]="true"
+        formControlName="password"
+    /></input-shelf-ui>
+
+    @if(isInvalidPassword) {
+    <text-ui type="danger" size="medium_16" back="dark">Введите пароль</text-ui>
+    }
+  </div>
+  <div class="form-login__input">
+    @if(serverError) {
+    <text-ui type="danger" size="medium_16" back="dark">{{ serverError }}</text-ui>
+    }
+    <button-ui type="primary" form="rounded" [disabled]="isDisabled" (onClick)="submit()">
+      <div class="form-login__submit-button">
+        <text-ui type="main" size="medium_16" back="light" [bold]="true">Продолжить</text-ui>
+      </div>
+    </button-ui>
+  </div>
+</form>

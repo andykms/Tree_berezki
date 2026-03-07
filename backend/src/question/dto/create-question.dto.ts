@@ -1,5 +1,4 @@
-import { MaxLength, MinLength, IsNotEmpty } from "class-validator";
-
+import { MaxLength, MinLength, IsNotEmpty } from 'class-validator';
 
 export class CreateQuestionDto {
   @IsNotEmpty()

@@ -1,24 +1,26 @@
-<div class="image-carousel__container" [style.width]="windowWidth" [style.height]="windowHeight">
-  @for(image of images; track $index) {
-  <div
-    class="image__container"
-    (click)="onImageClick($index)"
-    [style.width]="imageWidth"
-    [style.height]="imageHeight"
-  >
-    <image-ui
-      [src]="image.src"
-      [alt]="image.alt"
-      [width]="imageWidth"
-      [height]="imageHeight"
-      [type]="form"
-    ></image-ui>
-    <div class="image-carousel__image-left">
-      <button-vertical-arrow-ui (onClick)="onPrevClick()" type="left"></button-vertical-arrow-ui>
+<div [style]="{ position: 'relative' }" [style.width]="windowWidth" [style.height]="windowHeight">
+  <div class="image-carousel__container" [style.width]="windowWidth" [style.height]="windowHeight">
+    @for(image of images; track $index) {
+    <div
+      class="image__container"
+      (click)="onImageClick($index)"
+      [style.width]="imageWidth"
+      [style.height]="imageHeight"
+    >
+      <image-ui
+        [src]="image.src"
+        [alt]="image.alt"
+        [width]="imageWidth"
+        [height]="imageHeight"
+        [type]="form"
+      ></image-ui>
     </div>
-    <div class="image-carousel__image-right">
-      <button-vertical-arrow-ui (onClick)="onNextClick()" type="right"></button-vertical-arrow-ui>
-    </div>
+    }
   </div>
-  }
+  <div class="image-carousel__image-left">
+    <button-vertical-arrow-ui (onClick)="onPrevClick()" type="left"></button-vertical-arrow-ui>
+  </div>
+  <div class="image-carousel__image-right">
+    <button-vertical-arrow-ui (onClick)="onNextClick()" type="right"></button-vertical-arrow-ui>
+  </div>
 </div>

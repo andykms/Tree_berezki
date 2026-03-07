@@ -1,23 +1,24 @@
-import {
-  Injectable,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { Category } from '../category/entities/category.entity';
-import { ShowcaseProducts } from '../shop/entities/showcase-products.entity';
+import { ShowcaseProducts } from '../showcase-products/entities/showcase-products.entity';
 import { ProductParam } from './entities/product-param.entity';
-import { Param } from './entities/param.entity';
-import { RequiredParam } from '../category/entities/required-param.entity';
+import { Param } from '../param/entities/param.entity';
 import { GetProductQueryDto } from './dto/get-products.dto';
 import { IGetProductResponse } from './dto/get-product-response.dto';
 import { GetProductsResponseDto } from './dto/get-products-response.dto';
 import { CreateProductParamDto } from './dto/create-product.dto';
 import { SelectQueryBuilder } from 'typeorm/browser';
 import { GetShowcaseProductResponseDto } from './dto/get-showcase-repsponse.dto';
+import { FileMoveService } from '../file-move/file-move.service';
+import { ProductImage } from './entities/product-image.entity';
+import { Measure } from '../measure/entities/measure.entity';
+import { GetParamsQueryDto } from '../param/dto/get-params.dto';
+import { ParamService } from '../param/param.service';
 
 export enum TSorts {
   'ASC',
@@ -31,6 +32,9 @@ export type TParamWithValue = {
 
 @Injectable()
 export class ProductService {
+  @Inject(ParamService)
+  private readonly paramService: ParamService;
+
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
@@ -40,10 +44,11 @@ export class ProductService {
     private readonly showcaseProductsRepository: Repository<ShowcaseProducts>,
     @InjectRepository(ProductParam)
     private readonly productParamRepository: Repository<ProductParam>,
-    @InjectRepository(Param)
-    private readonly paramRepository: Repository<Param>,
-    @InjectRepository(RequiredParam)
-    private readonly requiredParamRepository: Repository<RequiredParam>,
+    @InjectRepository(ProductImage)
+    private readonly productImageRepository: Repository<ProductImage>,
+    @InjectRepository(Measure)
+    private readonly measureRepository: Repository<Measure>,
+    private readonly fileMoveService: FileMoveService,
   ) {}
 
   async create(
@@ -59,13 +64,8 @@ export class ProductService {
       });
 
     //ищем все обязательные параметры категории
-    const requiredParams = await this.requiredParamRepository.find({
-      where: {
-        category: {
-          id: categoryId,
-        },
-      },
-    });
+    const requiredParams =
+      await this.paramService.getParamsByCategory(categoryId);
 
     //Проверяем, что обязательные параметры заполнены
     const productParams: TParamWithValue[] = await this.__isFullRequiredParams(
@@ -73,9 +73,16 @@ export class ProductService {
       requiredParams,
     );
 
+    const images = createProductDto.images;
+    if (images && images.length > 0) {
+      for (const image of images) {
+        await this.fileMoveService.moveFile(image.url);
+      }
+    }
+
     const newProduct = await this.productRepository.create({
       ...createProductDto,
-      category: requiredParams[0].category[0],
+      category: requiredParams[0].categories[0],
       showcaseProducts,
     });
 
@@ -105,8 +112,29 @@ export class ProductService {
     updateProductDto: UpdateProductDto,
   ): Promise<GetProductsResponseDto> {
     const product = await this.productRepository.findOneOrFail({
-      where: { id },
+      where: {
+        id,
+        showcaseProducts: {
+          id: updateProductDto.showcaseId,
+          shop: {
+            id: updateProductDto.shopId,
+          },
+        },
+      },
     });
+
+    if (updateProductDto.images) {
+      for (const image of product.images) {
+        const fileName = image.url;
+        await this.fileMoveService.deleteFile(fileName);
+      }
+      product.images = [];
+      for (const image of updateProductDto.images) {
+        await this.fileMoveService.moveFile(image.url);
+        const newImage = await this.productImageRepository.create(image);
+        product.images.push(newImage);
+      }
+    }
 
     let newCategory: Category | null = updateProductDto.categoryId
       ? await this.categoryRepository.findOne({
@@ -114,18 +142,12 @@ export class ProductService {
         })
       : null;
 
-    let newShowcaseProducts: ShowcaseProducts | null =
-      updateProductDto.showcaseId
-        ? await this.showcaseProductsRepository.findOne({
-            where: { id: updateProductDto.showcaseId },
-          })
-        : null;
-
-    if (updateProductDto.params)
+    if (updateProductDto.params) {
       await this.__patchProductParams(updateProductDto.params, product);
-    if (newCategory) product.category = newCategory;
-    if (newShowcaseProducts) product.showcaseProducts = newShowcaseProducts;
-
+    }
+    if (newCategory) {
+      product.category = newCategory;
+    }
 
     await this.productRepository.save(product);
 
@@ -182,16 +204,6 @@ export class ProductService {
     return this.__formatManyProductsResponse(products);
   }
 
-  async findShowcase(id: string): Promise<GetShowcaseProductResponseDto> {
-    const showcase = await this.showcaseProductsRepository.findOneOrFail({
-      where: { id },
-    });
-    return {
-      ...showcase,
-      products: this.__formatManyProductsResponse(showcase.products),
-    };
-  }
-
   private __productResponseAdapting(product: Product): IGetProductResponse {
     return {
       ...product,
@@ -219,7 +231,7 @@ export class ProductService {
 
   private async __isFullRequiredParams(
     createProductDto: CreateProductDto,
-    requiredParams: RequiredParam[],
+    requiredParams: Param[],
   ): Promise<TParamWithValue[]> {
     const requiredParamNames: { [key: string]: boolean } = {};
     requiredParams.forEach((param) => {
@@ -229,9 +241,7 @@ export class ProductService {
     const productParams: { param: Param; value: string }[] = [];
 
     for (const param of createProductDto.params) {
-      const paramEntity = await this.paramRepository.findOneOrFail({
-        where: { id: param.paramId },
-      });
+      const paramEntity = await this.paramService.findOne(param.paramId);
       requiredParamNames[paramEntity.name] = true;
       productParams.push({ param: paramEntity, value: param.value });
     }
@@ -263,9 +273,7 @@ export class ProductService {
   ): Promise<void> {
     const newParams: TParamWithValue[] = [];
     for (const param of params) {
-      const paramEntity = await this.paramRepository.findOneOrFail({
-        where: { id: param.paramId },
-      });
+      const paramEntity = await this.paramService.findOne(param.paramId);
       newParams.push({ param: paramEntity, value: param.value });
     }
 

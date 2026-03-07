@@ -2,10 +2,12 @@
   inline-size: 100%;
   block-size: 70px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  padding: 0 25px;
   background-color: var(--secondary-back);
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
 }
 
 .menu-mobile__svg {

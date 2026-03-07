@@ -59,7 +59,6 @@ export class Comment {
   })
   dislikes_count: number;
 
-
   @Column({
     default: 0,
   })
@@ -81,6 +80,8 @@ export class Comment {
   @OneToMany(() => Reply, (reply) => reply.comment, { onDelete: 'CASCADE' })
   replies: Reply[];
 
-  @OneToMany(() => CommentImage, (image) => image.comment, { onDelete: 'CASCADE' })
+  @OneToMany(() => CommentImage, (image) => image.comment, {
+    onDelete: 'CASCADE',
+  })
   images: CommentImage[];
 }

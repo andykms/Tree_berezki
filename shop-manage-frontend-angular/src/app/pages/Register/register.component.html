@@ -1,0 +1,151 @@
+<div class="register-container">
+  <div class="register-card">
+    <!-- Заголовок -->
+    <div class="register-header">
+      <h1 class="register-title">Регистрация</h1>
+      <p class="register-subtitle">Создайте новый аккаунт</p>
+    </div>
+
+    <!-- Форма -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form" novalidate>
+      <!-- Поле телефона -->
+      <div class="form-group">
+        <label for="phone" class="form-label">Телефон</label>
+        <div class="input-wrapper">
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            class="form-input"
+            placeholder="+71234567890"
+            [class.invalid]="isFieldInvalid('phone')"
+            (input)="formatPhone($event)"
+            (blur)="phone?.markAsTouched()"
+            autocomplete="tel"
+            autofocus
+          />
+          <span class="input-hint">Формат: +7XXXXXXXXXX</span>
+        </div>
+        
+        <!-- Сообщение об ошибке для телефона -->
+        @if(isFieldInvalid('phone')) {
+          <div class="error-message">
+            {{ getFieldError('phone') }}
+          </div>
+        }
+      </div>
+
+      <!-- Поле пароля -->
+      <div class="form-group">
+        <label for="password" class="form-label">Пароль</label>
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="form-input"
+            placeholder="Введите пароль"
+            [class.invalid]="isFieldInvalid('password')"
+            (blur)="password?.markAsTouched()"
+            autocomplete="new-password"
+          />
+          <button 
+            type="button" 
+            class="password-toggle"
+            (click)="togglePasswordVisibility('password', $event)"
+            tabindex="-1"
+          >
+            👁
+          </button>
+        </div>
+        
+        <!-- Требования к паролю -->
+        <div class="password-requirements">
+          <p class="requirements-title">Пароль должен содержать:</p>
+          <ul class="requirements-list">
+            <li [class.valid]="password?.value?.length >= 8">Минимум 8 символов</li>
+            <li [class.valid]="/[A-Z]/.test(password?.value)">Заглавную букву</li>
+            <li [class.valid]="/[a-z]/.test(password?.value)">Строчную букву</li>
+            <li [class.valid]="/[0-9]/.test(password?.value)">Цифру</li>
+          </ul>
+        </div>
+        
+        <!-- Сообщение об ошибке для пароля -->
+        @if(isFieldInvalid('password')) {
+          <div class="error-message">
+            {{ getFieldError('password') }}
+          </div>
+        }
+      </div>
+
+      <!-- Поле подтверждения пароля -->
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Подтверждение пароля</label>
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="form-input"
+            placeholder="Повторите пароль"
+            [class.invalid]="isFieldInvalid('confirmPassword')"
+            (blur)="confirmPassword?.markAsTouched()"
+            autocomplete="new-password"
+          />
+          <button 
+            type="button" 
+            class="password-toggle"
+            (click)="togglePasswordVisibility('confirmPassword', $event)"
+            tabindex="-1"
+          >
+            👁
+          </button>
+        </div>
+        
+        <!-- Сообщение об ошибке для подтверждения пароля -->
+        @if(isFieldInvalid('confirmPassword')) {
+          <div class="error-message">
+            {{ getFieldError('confirmPassword') }}
+          </div>
+        }
+      </div>
+
+      <!-- Сообщение об ошибке сервера -->
+      @if(serverError) {
+        <div class="server-error">
+          {{ serverError }}
+        </div>
+      }
+
+      <!-- Кнопка отправки -->
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="registerForm.invalid || isLoading"
+        [class.loading]="isLoading"
+      >
+        @if(!isLoading) {
+          <span>Зарегистрироваться</span>
+        } @else {
+          <span class="loading-spinner"></span>
+        }
+      </button>
+
+      <!-- Ссылка на вход -->
+      <div class="auth-links">
+        <p class="auth-link-text">
+          Уже есть аккаунт? 
+          <a routerLink="/login" class="auth-link">Войти</a>
+        </p>
+      </div>
+    </form>
+
+    <!-- Футер с информацией -->
+    <div class="register-footer">
+      <p class="footer-text">
+        Создавая аккаунт, вы соглашаетесь с 
+        <a href="/terms" class="footer-link">условиями использования</a>
+      </p>
+    </div>
+  </div>
+</div>

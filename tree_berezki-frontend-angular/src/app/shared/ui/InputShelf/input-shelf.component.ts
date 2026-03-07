@@ -1,7 +1,8 @@
 import { Component, Input } from "@angular/core"
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TextComponent } from "../Text/text.component";
-import { InputComponent, InputValueBackground, InputValueSizeMobile } from "../Input/input.component";
+import { InputValueBackground, InputValueSizeMobile, InputType } from "../Input/input.component";
+
 
 @Component({
   selector: "input-shelf-ui",
@@ -11,31 +12,17 @@ import { InputComponent, InputValueBackground, InputValueSizeMobile } from "../I
     FormsModule,
     ReactiveFormsModule,
     TextComponent,
-    InputComponent
   ]
 })
 export class InputShelfComponent {
   @Input() size: InputValueSizeMobile = "large_24";
   @Input() background: InputValueBackground = "dark";
-  @Input() required: boolean = false;
-  @Input() minLength: number = 0;
-  @Input() maxLength: number = 255;
-  @Input() pattern: string = "";
+  @Input() type: InputType = "text";
   @Input() placeholder: string = "";
-  @Input() hasPlaceholderOnInput: boolean = false;
+  @Input() hasPlaceholderOnInput: boolean = true;
   @Input() errorMessage: string = "";
-  @Input() formControlName: string = "";
   @Input() width: string = "auto";
-
-  isPlaceholderOnInput = false;
-
-  onFocusEvent() {
-    this.isPlaceholderOnInput = true;
-  }
-
-  onEmptyEvent() {
-    this.isPlaceholderOnInput = false;
-  }
+  @Input() isPlaceholderOnInput = false;
 
   get placeholderClasses() {
     return {
@@ -59,7 +46,8 @@ export class InputShelfComponent {
   get borderClasses() {
     return {
       "input__border": true,
-      "input__border-on-focus": this.isPlaceholderOnInput
+      "input__border-on-focus": this.isPlaceholderOnInput,
+      "error": this.errorMessage.length > 0
     }
   }
 

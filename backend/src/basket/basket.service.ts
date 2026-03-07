@@ -9,7 +9,9 @@ import { GetBasketQueryDto } from './dto/get-basket.dto';
 
 @Injectable()
 export class BasketService {
-  constructor(@InjectRepository(Basket) private basketRepository: Repository<Basket>) {}
+  constructor(
+    @InjectRepository(Basket) private basketRepository: Repository<Basket>,
+  ) {}
 
   async create(createBasketDto: CreateBasketDto, user: User) {
     const account = user.accounts.find(
@@ -61,7 +63,7 @@ export class BasketService {
     return {
       items: basket,
       total: basket.length,
-    }
+    };
   }
 
   async remove(deleteBasketDto: DeleteBasketDto, user: User) {

@@ -1,6 +1,6 @@
 import { Component, Input} from '@angular/core';
 
-export type TextType = 'main' | 'sub' | 'crossed-out' | "primary" ;
+export type TextType = 'main' | 'sub' | 'crossed-out' | "primary" | "danger";
 
 export type TextSizeMobile = 'large_24' | 'large_20' | 'medium_16' | 'medium_14' | "small_12" | "small_10" | "small_8";
 

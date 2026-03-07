@@ -1,0 +1,190 @@
+<div class="user-container">
+  <!-- Хедер -->
+  <header class="user-header">
+    <div class="header-content">
+      <div class="user-info">
+        <h1 class="user-title">Мои магазины</h1>
+        @if(user) {
+          <div class="user-contact">
+            <span class="user-phone">{{ user.phone }}</span>
+            <span class="user-id">ID: {{ user.id.slice(0, 8) }}...</span>
+          </div>
+        }
+      </div>
+      
+      <div class="header-actions">
+        <button 
+          class="refresh-button" 
+          (click)="refreshData()" 
+          [disabled]="isLoading()"
+          title="Обновить"
+        >
+          <span class="refresh-icon">↻</span>
+          Обновить
+        </button>
+        
+        <button class="logout-button" (click)="logout()">
+          <span class="logout-icon">🚪</span>
+          Выйти
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="user-main">
+    <!-- Состояние загрузки -->
+    @if(isLoading()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Загрузка данных...</p>
+      </div>
+    }
+
+    <!-- Ошибка -->
+    @if(error()) {
+      <div class="error-state">
+        <div class="error-icon">⚠️</div>
+        <h3 class="error-title">Произошла ошибка</h3>
+        <p class="error-message">{{ error() }}</p>
+        <button class="retry-button" (click)="refreshData()">
+          Попробовать снова
+        </button>
+      </div>
+    }
+
+    <!-- Контент -->
+    @else if(!isLoading()) {
+      <div class="shops-content">
+        <!-- Статистика -->
+        <div class="stats-cards">
+          <div class="stat-card">
+            <div class="stat-value">{{ shops.length }}</div>
+            <div class="stat-label">Всего магазинов</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-value">
+              {{ activeShopsCount }}
+            </div>
+            <div class="stat-label">Активных</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-value">
+              {{ pendingShopsCount }}
+            </div>
+            <div class="stat-label">Ожидают</div>
+          </div>
+        </div>
+
+        <!-- Заголовок списка -->
+        <div class="shops-header">
+          <h2 class="shops-title">Список магазинов</h2>
+          <button class="create-shop-button" (click)="createShop()">
+            <span class="plus-icon">+</span>
+            Создать магазин
+          </button>
+        </div>
+
+        <!-- Список магазинов -->
+        @if(!shops || shops.length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">🏪</div>
+            <h3 class="empty-title">У вас пока нет магазинов</h3>
+            <p class="empty-text">Создайте свой первый магазин, чтобы начать продавать</p>
+            <button class="create-first-shop-button" (click)="createShop()">
+              Создать первый магазин
+            </button>
+          </div>
+        } @else {
+          <div class="shops-grid">
+            @for(shop of shops; track shop.id) {
+              <div class="shop-card" (click)="goToShop(shop.id)">
+                <!-- Хедер карточки -->
+                <div class="shop-card-header">
+                  <div class="shop-name-wrapper">
+                    <h3 class="shop-name">{{ shop.name || 'Без названия' }}</h3>
+                    <span 
+                      class="shop-status" 
+                      [class]="getShopStatusColor(shop.status)"
+                    >
+                      {{ getShopStatusText(shop.status) }}
+                    </span>
+                  </div>
+                  
+                  @if(shop.rating) {
+                    <div class="shop-rating">
+                      <span class="rating-star">⭐</span>
+                      <span class="rating-value">{{ shop.rating.toFixed(1) }}</span>
+                    </div>
+                  }
+                </div>
+
+                <!-- Тело карточки -->
+                <div class="shop-card-body">
+                  <div class="shop-info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ shop.email || '—' }}</span>
+                  </div>
+                  
+                  <div class="shop-info-row">
+                    <span class="info-label">Организация:</span>
+                    <span class="info-value">{{ shop.organization || '—' }}</span>
+                  </div>
+                  
+                  <div class="shop-info-row">
+                    <span class="info-label">ИНН:</span>
+                    <span class="info-value">{{ shop.INN || '—' }}</span>
+                  </div>
+                  
+                  <div class="shop-info-row">
+                    <span class="info-label">Страна:</span>
+                    <span class="info-value">{{ shop.country || '—' }}</span>
+                  </div>
+                  
+                  <div class="shop-info-row">
+                    <span class="info-label">Создан:</span>
+                    <span class="info-value">{{ formatDate(shop.created_at) }}</span>
+                  </div>
+                </div>
+
+                <!-- Футер карточки -->
+                <div class="shop-card-footer">
+                  <div class="shop-ids">
+                    <span class="shop-id">ID: {{ shop.id.slice(0, 8) }}...</span>
+                    @if(shop.OGRN) {
+                      <span class="shop-ogrn">ОГРН: {{ shop.OGRN }}</span>
+                    }
+                  </div>
+                  
+                  <div class="shop-arrow">
+                    <span class="arrow-icon">→</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Пагинация или доп информация -->
+        @if(shops.length > 0) {
+          <div class="shops-footer">
+            <p class="shops-count">Показано {{ shops.length }} магазинов</p>
+            <button class="create-another-shop-button" (click)="createShop()">
+              + Добавить еще магазин
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </main>
+
+  <!-- Футер -->
+  <footer class="user-footer">
+    <p class="footer-text">
+      © {{ currentYear }} Система управления магазинами. 
+      <a routerLink="/help" class="footer-link">Помощь</a> | 
+      <a routerLink="/support" class="footer-link">Поддержка</a>
+    </p>
+  </footer>
+</div>

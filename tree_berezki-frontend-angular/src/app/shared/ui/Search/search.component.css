@@ -4,6 +4,7 @@
   align-items: center;
   gap: 18px;
   padding: 0 25px;
+  border-radius: 100em;
 }
 
 .light {

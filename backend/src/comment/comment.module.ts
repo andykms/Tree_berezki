@@ -12,6 +12,15 @@ import { CommentLike } from './entities/comment-likes.entity';
 @Module({
   controllers: [CommentController],
   providers: [CommentService],
-  imports: [TypeOrmModule.forFeature([Comment, Reply, ReplyLike, CommentImage, CommentLike, Product])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Comment,
+      Reply,
+      ReplyLike,
+      CommentImage,
+      CommentLike,
+      Product,
+    ]),
+  ],
 })
 export class CommentModule {}

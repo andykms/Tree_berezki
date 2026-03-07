@@ -3,9 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ISessionInfo, User } from '../user/entities/user.entity';
-import { RefreshTokenService } from './refresh-token/refresh-token.service';
 import { ConfigService } from '@nestjs/config';
-import { type IJwtConfig } from '../config/jwt.config';
 import { Response } from 'express';
 
 @Injectable()
@@ -13,21 +11,21 @@ export class AuthService {
   constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
-    private readonly refreshService: RefreshTokenService,
     private readonly configService: ConfigService,
   ) {}
 
   async auth(user: User, res: Response, ipAddress: string, userAgent: string) {
     const payload = { sub: user.id };
-    //console.log("PAYLOAD", payload);
+
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_CONFIG').accessTokenSecret,
       expiresIn: this.configService.get('JWT_CONFIG').accessTokenExpiresIn,
     });
-    //console.log("ACCESS_TOKEN", accessToken);
-    const refreshToken = await this.refreshService.sign(payload);
 
-    //console.log("REFRESH_TOKEN", refreshToken);
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_CONFIG').refreshTokenSecret,
+      expiresIn: this.configService.get('JWT_CONFIG').refreshTokenExpiresIn,
+    });
 
     const sessionInfo = {
       refreshToken,
@@ -36,13 +34,9 @@ export class AuthService {
       createdAt: new Date(),
     };
 
-    //console.log("SESSION_INFO", sessionInfo);
-
     await this.usersService.update(user.id, {
       sessions: [...user.sessions, sessionInfo],
     });
-
-    //console.log("UPDATED");
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -51,10 +45,10 @@ export class AuthService {
       maxAge: this.configService.get('refreshTokenExpiresIn'),
     });
 
-    return {
+    return Promise.resolve({
       accessToken,
       refreshToken,
-    };
+    });
   }
 
   async validatePassword(
@@ -63,14 +57,12 @@ export class AuthService {
   ): Promise<User | null> {
     const user = await this.usersService.findByPhone(phone);
     if (!user) {
-      console.log("ПОЛЬЗОВАТЕЛЬ НЕ НАЙДЕН ПО ТЕЛЕФОНУ")
       return null;
     }
     const matched = await bcrypt.compare(password, user.password);
     if (matched) {
       return user;
     }
-    console.log("ПАРОЛИ НЕ СОВПАЛИ")
     return null;
   }
 

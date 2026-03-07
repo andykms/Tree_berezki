@@ -1,8 +1,8 @@
 <div class="input-code__container" codeInputs (onHasInput)="onHasInputEvent($event)" (onWithoutInput)="onWithoutInputEvent($event)"> 
-  @for(formControlName of formControlNames; track $index) {
+  @for(formControlName of formControls; track $index) {
     <div class="input-code__window">
       <div class="input-code__window-input" [style.zIndex]="1">
-        <input-ui [maxLength]="1" [minLength]="1" [formControlName]="formControlName"></input-ui>
+        <input-ui [name]="name" [maxLength]="1" [minLength]="1" [control]="formControlName"></input-ui>
       </div>
       <div [class]="placeholderClasses($index)" [style.zIndex]="0">
         <text-ui [size]="size" type="sub" [back]="back">X</text-ui>

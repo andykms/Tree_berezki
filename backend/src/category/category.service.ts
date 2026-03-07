@@ -4,11 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
-import { RequiredParam } from './entities/required-param.entity';
+import { Param } from '../product/entities/param.entity';
 
 @Injectable()
 export class CategoryService {
-  constructor(@InjectRepository(Category) private readonly categoryRepository: Repository<Category>) {}
+  constructor(
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+  ) {}
 
   create(createCategoryDto: CreateCategoryDto) {
     return 'This action adds a new category';
@@ -31,17 +34,20 @@ export class CategoryService {
   }
 
   async getRequiredParams(id: string) {
-    const category = await this.categoryRepository.findOne({where: {id}, relations: ["requiredParams"]});
-    if(!category) {
-      throw new NotFoundException("категория не найдена");
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+      relations: ['requiredParams'],
+    });
+    if (!category) {
+      throw new NotFoundException('категория не найдена');
     }
-    const requiredParams = category.requiredParams;
-    const result: (Omit<RequiredParam, "measure"> & {measure: string})[] = [];
-    for(const param of requiredParams) {
+    const requiredParams = category.params;
+    const result: (Omit<Param, 'measure'> & { measure: string })[] = [];
+    for (const param of requiredParams) {
       result.push({
         ...param,
-        measure: param.measure.value
-      })
+        measure: param.measure.value,
+      });
     }
     return result;
   }

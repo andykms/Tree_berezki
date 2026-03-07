@@ -33,7 +33,10 @@ export class AccountController {
 
   @UseGuards(JwtGuard, AccountGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateAccountDto: UpdateAccountDto,
+  ) {
     return await this.accountService.update(id, updateAccountDto);
   }
 

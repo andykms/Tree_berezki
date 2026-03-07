@@ -1,4 +1,5 @@
 import {Component, Input } from '@angular/core';
+import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { InputComponent, InputValueBackground, InputValueSizeMobile } from '../Input/input.component';
 import { CodeInputsDirective } from '../../directives/code-inputs.directive';
 import { TextComponent, TextBackground } from '../Text/text.component';
@@ -7,7 +8,9 @@ import { TextComponent, TextBackground } from '../Text/text.component';
   imports: [
     InputComponent,
     CodeInputsDirective,
-    TextComponent
+    TextComponent,
+    ReactiveFormsModule,
+    FormsModule
   ],
   selector: "input-code-ui",
   templateUrl: "./input-code.component.html",
@@ -18,12 +21,13 @@ export class InputCodeComponent {
   @Input() background: InputValueBackground = "dark";
   @Input() errorMessage: string = "";
   @Input() back: TextBackground = "dark";
-  @Input() formControlNames: string[] = [];
+  @Input() formControls: FormControl[] = [];
+  @Input() name: string = "";
 
   hasInputs: boolean[] = [];
 
   constructor() {
-    this.hasInputs = new Array(this.formControlNames.length).fill(false);
+    this.hasInputs = new Array(this.formControls.length).fill(false);
   }
 
   onHasInputEvent(index: number) {

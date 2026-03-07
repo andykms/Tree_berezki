@@ -5,24 +5,23 @@ import {
   PrimaryGeneratedColumn,
   Column,
   Generated,
-  ManyToMany
+  ManyToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { ProductParam } from './product-param.entity';
 import { Category } from '../../category/entities/category.entity';
 import { Comment } from '../../comment/entities/comment.entity';
-import { ShowcaseProducts } from '../../shop/entities/showcase-products.entity';
+import { ShowcaseProducts } from '../../showcase-products/entities/showcase-products.entity';
 import { ProductImage } from './product-image.entity';
 import { Basket } from '../../basket/entities/basket.entity';
 import { Question } from '../../question/entities/question.entity';
 import { Account } from '../../account/entities/account.entity';
 
 export enum EProductStatus {
-  SALED = "saled",
-  BLOCKED = "blocked",
-  DELETED = "deleted"
+  SALED = 'saled',
+  BLOCKED = 'blocked',
+  DELETED = 'deleted',
 }
-
 
 @Entity()
 export class Product {
@@ -104,7 +103,9 @@ export class Product {
   @Exclude()
   baskets: Basket[];
 
-  @OneToMany(()=> Question, (question) => question.product, { onDelete: 'CASCADE' })
+  @OneToMany(() => Question, (question) => question.product, {
+    onDelete: 'CASCADE',
+  })
   @Exclude()
   questions: Question[];
 

@@ -25,7 +25,7 @@ export class CategoryController {
     return await this.categoryService.findOne(id);
   }
 
-  @Get(":id/required-params")
+  @Get(':id/required-params')
   async findRequiredParam(@Param('id') id: string) {
     return await this.categoryService.getRequiredParams(id);
   }

@@ -13,4 +13,3 @@ import { dbConfiguration, IDbConfig } from '../config/db.config';
   ],
 })
 export class DatabaseModule {}
-

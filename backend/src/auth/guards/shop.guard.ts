@@ -8,7 +8,7 @@ import {
 import { User } from '../../user/entities/user.entity';
 
 @Injectable()
-export class ShopGuard implements CanActivate {
+export class JwtShopGuard implements CanActivate {
   constructor() {}
   canActivate(context: ExecutionContext): boolean {
     try {
@@ -16,8 +16,8 @@ export class ShopGuard implements CanActivate {
       const user = request.user as User;
       const userShops = user.shops.map((shop) => shop.id);
       if (
-        userShops.includes(request.params.shopId) ||
-        userShops.includes(request.body.shopId)
+        userShops.includes(request.params?.shopId) ||
+        userShops.includes(request.body?.shopId)
       ) {
         return true;
       }

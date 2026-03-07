@@ -8,18 +8,23 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const user = await this.userRepository.create({
       ...createUserDto,
-      sessions: []
+      sessions: [],
     });
     return await this.userRepository.save(user);
   }
 
   async findByPhone(phone: string) {
-    const user = await this.userRepository.findOne({ where: { phone }, select: ['password', 'accounts', 'shops'],});
+    const user = await this.userRepository.findOne({
+      where: { phone },
+      select: ['password', 'accounts', 'shops', 'sessions'],
+    });
     return user;
   }
 
@@ -28,13 +33,18 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['shops', 'accounts'],
+    });
     return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.update(id, updateUserDto);
-    return user;
+    const user = await this.userRepository.findOneOrFail({ where: { id } });
+    const newUser = this.userRepository.merge(user, updateUserDto);
+    await this.userRepository.save(newUser);
+    return newUser;
   }
 
   remove(id: string) {

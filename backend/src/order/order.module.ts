@@ -6,7 +6,6 @@ import { Order } from './entities/order.entity';
 import { OrderProduct } from './entities/order-product';
 import { Product } from '../product/entities/product.entity';
 
-
 @Module({
   controllers: [OrderController],
   providers: [OrderService],

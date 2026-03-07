@@ -1,4 +1,12 @@
-import { IsString, MinLength, MaxLength, IsNotEmpty, IsNumber, Max, Min } from 'class-validator';
+import {
+  IsString,
+  MinLength,
+  MaxLength,
+  IsNotEmpty,
+  IsNumber,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateBasketDto {
   @IsNotEmpty()
