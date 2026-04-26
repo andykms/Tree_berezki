@@ -6,7 +6,7 @@ import { MeasureService } from './measure.service';
 export class MeasureController {
   constructor(private readonly measureService: MeasureService) {}
 
-  @Get('measure')
+  @Get('')
   async getMeasures(@Query() query: GetMeasuresQueryDto) {
     return await this.measureService.getMeasure(query);
   }

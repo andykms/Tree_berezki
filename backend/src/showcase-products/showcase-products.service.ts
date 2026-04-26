@@ -48,12 +48,24 @@ export class ShowcaseProductsService {
     };
   }
 
-  async getShowcaseProducts(id: string) {
+  async getShowcaseList(id: string) {
     const shop = await this.shopService.findOne(id, ['showcaseProducts']);
     const showcaseProducts = shop.showcaseProducts;
     return {
       items: showcaseProducts,
       total: showcaseProducts.length,
     };
+  }
+
+  async getShowcaseProducts(showcaseId: string) {
+    const showcase = await this.showcaseProductsRepository.findOneOrFail({
+      where: { id: showcaseId },
+      relations: ['products'],
+    });
+
+    return {
+      items: showcase.products,
+      total: showcase.products.length,
+    }
   }
 }

@@ -10,6 +10,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { Account } from '../../account/entities/account.entity';
 import { Shop } from '../../shop/entities/shop.entity';
+import { UserSession } from './user-session.entity';
 
 @Entity()
 export class User {
@@ -30,12 +31,9 @@ export class User {
   })
   phone: string;
 
-  @Column({
-    type: 'jsonb',
-    default: [],
-  })
+  @OneToMany(() => UserSession, (session) => session.user)
   @Exclude()
-  sessions: ISessionInfo[];
+  sessions: UserSession[];
 
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];

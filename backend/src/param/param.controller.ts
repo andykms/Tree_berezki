@@ -18,8 +18,8 @@ import { GetRequiredParamsQueryDto } from './dto/get-required-params.dto';
 export class ParamController {
   constructor(private readonly paramService: ParamService) {}
 
-  @UseGuards(JwtGuard)
   @UseGuards(JwtShopGuard)
+  @UseGuards(JwtGuard)
   @Post()
   async createParam(@Body() data: CreateParamDto) {
     return await this.paramService.createParam(data);
@@ -33,10 +33,5 @@ export class ParamController {
   @Get(':id')
   async getParam(@Param('id') id: string) {
     return await this.paramService.findOne(id);
-  }
-
-  @Get('required-params')
-  async findRequiredParam(@Query() query: GetRequiredParamsQueryDto) {
-    return await this.paramService.getParamsByCategory(query.categoryId);
   }
 }

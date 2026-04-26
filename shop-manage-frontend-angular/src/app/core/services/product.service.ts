@@ -10,6 +10,7 @@ import { IUploadResponse } from '../models/upload-response.model';
 import { ICreateParam } from '../models/create-param.model';
 import { IParam } from '../models/product.model';
 import { IMeasure } from '../models/product.model';
+import { ICategory } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -18,33 +19,36 @@ export class ProductService {
   baseUrl: string = environment.apiUrl + '/product';
   uploadUrl: string = environment.apiUrl + '/upload';
   paramUrl: string = environment.apiUrl + '/param';
+  categoryUrl: string = environment.apiUrl + '/category';
+  measureUrl: string = environment.apiUrl + '/measure';
 
-  async create(data: ICreateProduct): Promise<Observable<IBaseResponse<IProduct>>> {
+  create(data: ICreateProduct): Observable<IBaseResponse<IProduct>> {
     return this.http.post<IBaseResponse<IProduct>>(this.baseUrl, data);
   }
 
-  async uploadImage(image: File): Promise<Observable<IUploadResponse>> {
+  uploadImage(image: File): Observable<IUploadResponse> {
     const formData = new FormData();
-    formData.append('image', image);
+    formData.append('file', image);
     return this.http.post<IUploadResponse>(this.uploadUrl, formData);
   }
 
-  async createParam(data: ICreateParam): Promise<Observable<IParam>> {
+  createParam(data: ICreateParam): Observable<IParam> {
     return this.http.post<IParam>(this.paramUrl, data);
   }
 
-  async getParams(limit: number, page: number): Promise<Observable<IBaseResponse<IParam[]>>> {
-    const params = new HttpParams();
-    params.append('limit', limit.toString());
-    params.append('page', page.toString());
-
-    return this.http.get<IBaseResponse<IParam[]>>(this.paramUrl, { params });
+  getParams(limit: number, page: number): Observable<IBaseResponse<IParam>> {
+    return this.http.get<IBaseResponse<IParam>>(this.paramUrl, { params: { limit, page } });
   }
 
-  async getMeasures(): Promise<Observable<IBaseResponse<IMeasure[]>>> {
-    const params = new HttpParams();
-    params.append('limit', '100');
-    params.append('page', '1');
-    return this.http.get<IBaseResponse<IMeasure[]>>(this.paramUrl, { params });
+  getMeasures(): Observable<IBaseResponse<IMeasure>> {
+    return this.http.get<IBaseResponse<IMeasure>>(this.measureUrl, { params: { limit: 100, page: 1 } });
+  }
+
+  getCategories(): Observable<IBaseResponse<ICategory>> {
+    return this.http.get<IBaseResponse<ICategory>>(this.categoryUrl);
+  }
+
+  getRequiredParams(categoryId: string): Observable<IBaseResponse<IParam>> {
+    return this.http.get<IBaseResponse<IParam>>(this.categoryUrl + `/${categoryId}` + '/required-params');
   }
 }

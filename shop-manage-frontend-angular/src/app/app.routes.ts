@@ -31,4 +31,14 @@ export const routes: Routes = [
     loadComponent: () => import("./pages/CreateGroup/create-showcase.component").then(m => m.CreateShowcaseComponent),
     canActivate: [AuthGuard]
   },
+  {
+    path: "showcase/:showcaseId",
+    loadComponent: () => import("./pages/Showcase/showcase.component").then(m => m.ShowcaseComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "product/create",
+    loadComponent: () => import("./pages/CreateProduct/create-product.component").then(m => m.CreateProductComponent),
+    canActivate: [AuthGuard]
+  }
 ];

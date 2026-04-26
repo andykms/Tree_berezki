@@ -38,7 +38,7 @@ export class ShopComponent implements OnInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
     
-    this.shopService.getShowcaseProducts(this.shopId()!)
+    this.shopService.getShowcaseList(this.shopId()!)
       .subscribe({
         next: (response: IBaseResponse<IShowcase>) => {
           this.showcases = response.items || [];
@@ -69,7 +69,9 @@ export class ShopComponent implements OnInit, OnDestroy {
   }
 
   onShowcaseClick(showcaseId: string): void {
-    this.router.navigate(['/showcase', showcaseId]);
+    this.router.navigate(['/showcase', showcaseId], {
+      queryParams: { shopId: this.shopId() }
+    });
   }
 
   ngOnDestroy(): void {

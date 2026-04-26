@@ -35,16 +35,6 @@ export class ParamService {
     return { items: params, total: params.length };
   }
 
-  async getParamsByCategory(categoryId: string) {
-    return await this.paramRepository.find({
-      where: {
-        categories: {
-          id: categoryId,
-        },
-      },
-    });
-  }
-
   async findOne(id: string) {
     return await this.paramRepository.findOneOrFail({
       where: { id },

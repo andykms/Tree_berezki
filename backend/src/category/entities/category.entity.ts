@@ -19,6 +19,8 @@ export class Category {
   path: string;
 
   @ManyToMany(() => Param, (param) => param.categories)
+  @JoinTable()
+  @Exclude()
   params: Param[];
 
   @OneToMany(() => Product, (product) => product.category)

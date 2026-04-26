@@ -26,6 +26,6 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Get()
   findOne(@Req() req) {
-    return this.userService.findOne(req.user.id);
+    return this.userService.findOne(req.user.id, ["shops", "accounts"]);
   }
 }

@@ -17,11 +17,26 @@ export class CategoryService {
   }
 
   async findAll() {
-    return await this.categoryRepository.find();
+    const categories = await this.categoryRepository.find();
+    return {
+      items: categories,
+      total: categories.length,
+    };
   }
 
   async findOne(id: string) {
     return await this.categoryRepository.findOneOrFail({ where: { id } });
+  }
+
+  async findRequiredParams(id: string) {
+    const category = await this.categoryRepository.findOneOrFail({
+      where: { id },
+      relations: ['params'],
+    });
+    return {
+      items: category.params,
+      total: category.params.length,
+    };
   }
 
   update(id: string, updateCategoryDto: UpdateCategoryDto) {

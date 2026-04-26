@@ -20,6 +20,7 @@ import { Reply } from '../comment/entities/reply.entity';
 import { Category } from '../category/entities/category.entity';
 import { Basket } from '../basket/entities/basket.entity';
 import { Account } from '../account/entities/account.entity';
+import { UserSession } from '../user/entities/user-session.entity';
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ export const dbConfiguration = registerAs(
     database: process.env.DB_NAME || 'tree_berezki',
     entities: [
       User,
+      UserSession,
       Shop,
       ShowcaseProducts,
       Question,

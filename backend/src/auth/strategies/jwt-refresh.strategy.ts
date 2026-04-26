@@ -22,7 +22,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
   }
 
   async validate(jwtPayload: { sub: string }) {
-    const user = await this.usersService.findOne(jwtPayload.sub);
+    const user = await this.usersService.findOne(jwtPayload.sub, ["sessions"]);
 
     if (!user) {
       throw new UnauthorizedException();

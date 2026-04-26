@@ -21,9 +21,10 @@ export class UserService {
   }
 
   async findByPhone(phone: string) {
-    const user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOneOrFail({
       where: { phone },
-      select: ['password', 'accounts', 'shops', 'sessions'],
+      select: ['password'],
+      relations: ['accounts', 'shops', 'sessions'],
     });
     return user;
   }
@@ -32,10 +33,10 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  async findOne(id: string) {
-    const user = await this.userRepository.findOne({
+  async findOne(id: string, relations?: string[]) {
+    const user = await this.userRepository.findOneOrFail({
       where: { id },
-      relations: ['shops', 'accounts'],
+      relations,
     });
     return user;
   }

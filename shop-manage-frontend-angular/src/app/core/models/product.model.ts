@@ -10,7 +10,6 @@ export enum EProductStatus {
 export interface ICategory {
   id: string;
   path: string;
-  params: IParam[];
 }
 
 

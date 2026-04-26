@@ -47,8 +47,18 @@ export class ShowcaseProductsController {
   }
 
   @UseGuards(JwtGuard)
+  @Get(':showcaseId/products')
+  async getShowcaseProducts(
+    @Param('showcaseId') showcaseId: string,
+  ) {
+    return await this.showcaseProductsService.getShowcaseProducts(
+      showcaseId,
+    );
+  }
+
+  @UseGuards(JwtGuard)
   @Get(':id/showcase')
   async getShowcase(@Param('id') id: string) {
-    return await this.showcaseProductsService.getShowcaseProducts(id);
+    return await this.showcaseProductsService.getShowcaseList(id);
   }
 }

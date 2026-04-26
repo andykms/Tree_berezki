@@ -1,4 +1,4 @@
-/*import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 
 import { User } from "./user.entity";
 
@@ -13,13 +13,15 @@ export class UserSession {
   @Column()
   userAgent: string;
 
-  @Column()
+  @Column({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   createdAt: Date;
 
   @Column()
   refreshToken: string;
 
-
   @ManyToOne(() => User, (user) => user.sessions)
   user: User;
-}*/
+}

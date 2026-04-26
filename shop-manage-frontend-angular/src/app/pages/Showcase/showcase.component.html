@@ -1,0 +1,113 @@
+<div class="showcase-container">
+  <!-- Шапка -->
+  <header class="showcase-header">
+    <button class="back-button" (click)="goBack()" title="Назад">
+      <span class="back-icon">←</span>
+    </button>
+    <h1 class="showcase-title">Товары витрины</h1>
+    <button class="create-button" (click)="createProduct()">
+      + Создать товар
+    </button>
+  </header>
+
+  <!-- Состояние загрузки -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Загрузка товаров...</p>
+    </div>
+  }
+
+  <!-- Ошибка -->
+  @if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <button (click)="reloadPage()">Повторить</button>
+    </div>
+  }
+
+  <!-- Список товаров -->
+  @if (!loading() && !error()) {
+    @if (products().items.length === 0) {
+      <div class="empty-state">
+        <p>В этой витрине пока нет товаров</p>
+        <button class="create-first-button" (click)="createProduct()">
+          Создать первый товар
+        </button>
+      </div>
+    } @else {
+      <div class="products-grid">
+        @for (product of products().items; track product.id) {
+          <div class="product-card" (click)="goToProduct(product.id)">
+            <!-- Мини-карусель изображений -->
+            <div class="product-image">
+              @if (product.images && product.images.length > 0) {
+                @let currentIdx = getCurrentImageIndex(product.id);
+                <img
+                  [src]="product.images[currentIdx].url"
+                  [alt]="product.name"
+                  class="main-image"
+                />
+                @if (product.images.length > 1) {
+                  <button
+                    class="arrow prev"
+                    (click)="prevImage(product.id, product.images.length, $event)"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    class="arrow next"
+                    (click)="nextImage(product.id, product.images.length, $event)"
+                  >
+                    ›
+                  </button>
+                  <div class="dots">
+                    @for (img of product.images; track img.id; let i = $index) {
+                      <span
+                        class="dot"
+                        [class.active]="i === currentIdx"
+                        (click)="imageIndices.set(product.id, i); $event.stopPropagation()"
+                      ></span>
+                    }
+                  </div>
+                }
+              } @else {
+                <div class="no-image">Нет фото</div>
+              }
+            </div>
+
+            <!-- Информация о товаре -->
+            <div class="product-info">
+              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-meta">
+                <span class="product-status" [class]="getStatusClass(product.status)">
+                  {{ getStatusText(product.status) }}
+                </span>
+                <span class="product-purchases">Куплено: {{ product.purchase_count }}</span>
+              </div>
+              <div class="product-details">
+                <div class="product-category">
+                  Категория: {{ product.category?.path || '—' }}
+                </div>
+                <div class="product-created">
+                  Создан: {{ product.created_at | date:'dd.MM.yyyy' }}
+                </div>
+              </div>
+              <div class="product-price">
+                @if (product.discount > 0) {
+                  <span class="old-price">{{ product.price_rubles }} ₽</span>
+                  <span class="new-price">
+                    {{ getDiscountedPrice(product.price_rubles, product.discount) }} ₽
+                  </span>
+                  <span class="discount-badge">-{{ product.discount }}%</span>
+                } @else {
+                  <span class="price">{{ product.price_rubles }} ₽</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

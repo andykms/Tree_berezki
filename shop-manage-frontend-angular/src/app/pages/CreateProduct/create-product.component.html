@@ -1,0 +1,214 @@
+<div class="create-product-container">
+  <!-- Шапка -->
+  <header class="create-product-header">
+    <button class="back-button" (click)="goBack()" title="Назад">
+      <span class="back-icon">←</span>
+    </button>
+    <h1 class="create-product-title">Создание товара</h1>
+    <div></div>
+  </header>
+
+  <!-- Секция загрузки изображений -->
+  <section class="images-section">
+    <h3>Фотографии товара (макс. 10)</h3>
+    <div class="images-preview">
+      @if (images().length > 0) {
+        <div class="carousel">
+          <button class="carousel-arrow prev" (click)="prevImage()" [disabled]="images().length === 0">‹</button>
+          <div class="carousel-image">
+            <img [src]="images()[currentImageIndex()].url" alt="preview" />
+          </div>
+          <button class="carousel-arrow next" (click)="nextImage()" [disabled]="images().length === 0">›</button>
+        </div>
+      } @else {
+        <div class="no-image-placeholder">Нет изображений</div>
+      }
+    </div>
+
+    <!-- Миниатюры с управлением порядком -->
+    @if (images().length > 0) {
+      <div class="thumbnails">
+        @for (img of images(); track img.url; let i = $index) {
+          <div class="thumbnail" [class.active]="i === currentImageIndex()">
+            <img [src]="img.url" alt="thumb" (click)="setCurrentImageIndex(i)" />
+            <div class="thumbnail-controls">
+              <button (click)="moveImageLeft(i)" [disabled]="i === 0">←</button>
+              <button (click)="moveImageRight(i)" [disabled]="i === images().length-1">→</button>
+              <button class="remove" (click)="removeImage(i)">✕</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Кнопка загрузки -->
+    <div class="upload-area">
+      <input
+        type="file"
+        #fileInput
+        multiple
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        [disabled]="images().length >= 10 || isLoading()"
+        style="display: none"
+      />
+      <button
+        class="upload-button"
+        (click)="fileInput.click()"
+        [disabled]="images().length >= 10 || isLoading()"
+      >
+        + Загрузить фото
+      </button>
+      <div class="image-counter">{{ images().length }}/10</div>
+    </div>
+  </section>
+
+  <!-- Форма -->
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+    <!-- Основные поля -->
+    <div class="form-row">
+      <label for="name">Название *</label>
+      <input id="name" formControlName="name" type="text" />
+      @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+        <div class="error">Обязательное поле, мин. 2 символа</div>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="price">Цена (₽) *</label>
+      <input id="price" formControlName="price_rubles" type="number" min="1" />
+      @if (productForm.get('price_rubles')?.invalid && productForm.get('price_rubles')?.touched) {
+        <div class="error">Цена должна быть не менее 1</div>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="discount">Скидка (%)</label>
+      <input id="discount" formControlName="discount" type="number" min="0" max="100" />
+      @if (productForm.get('discount')?.invalid && productForm.get('discount')?.touched) {
+        <div class="error">Скидка от 0 до 100</div>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="description">Описание</label>
+      <textarea id="description" formControlName="description" rows="4" maxlength="500"></textarea>
+      @if (productForm.get('description')?.errors?.['maxlength']) {
+        <div class="error">Максимум 500 символов</div>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="count">Количество *</label>
+      <input id="count" formControlName="count" type="number" min="1" />
+      @if (productForm.get('count')?.invalid && productForm.get('count')?.touched) {
+        <div class="error">Количество должно быть не менее 1</div>
+      }
+    </div>
+
+    <!-- Категория -->
+    <div class="form-row">
+      <label for="category">Категория *</label>
+      <select id="category" formControlName="categoryId">
+        <option value="" disabled selected>Выберите категорию</option>
+        @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.path }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Обязательные параметры -->
+    @if (requiredParamsArray.length > 0) {
+      <div class="required-params">
+        <h3>Обязательные параметры</h3>
+        <div formArrayName="requiredParams">
+          @for (group of requiredParamsArray.controls; track group; let i = $index) {
+            <div [formGroupName]="i" class="param-row">
+              <label>{{ group.get('name')?.value }}</label>
+              <input formControlName="value" type="text" />
+              <span class="measure">{{ group.get('measureValue')?.value }}</span>
+              @if (group.get('value')?.invalid && group.get('value')?.touched) {
+                <div class="error">Обязательное поле</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Дополнительные параметры -->
+    <div class="extra-params">
+      <h3>Дополнительные параметры</h3>
+      <div formArrayName="extraParams">
+        @for (group of extraParamsArray.controls; track group; let i = $index) {
+          <div [formGroupName]="i" class="extra-param-card">
+            <div class="param-type">
+              <label>
+                <input type="radio" [value]="'existing'" formControlName="type" (change)="onExtraParamTypeChange(i, 'existing')" />
+                Выбрать существующий
+              </label>
+              <label>
+                <input type="radio" [value]="'new'" formControlName="type" (change)="onExtraParamTypeChange(i, 'new')" />
+                Создать новый
+              </label>
+            </div>
+
+            @if (group.get('type')?.value === 'existing') {
+              <div class="param-existing">
+                <ng-select
+                  [items]="existingParams()"
+                  bindLabel="name"
+                  bindValue="id"
+                  formControlName="paramId"
+                  placeholder="Выберите параметр"
+                  [virtualScroll]="true"
+                  [loading]="loadingExistingParams()"
+                  (scrollToEnd)="loadExistingParams(existingParamsPage())"
+                >
+                  <ng-template ng-option-tmp let-item="item">
+                    {{ item.name }} ({{ item.measure?.value }})
+                  </ng-template>
+                </ng-select>
+                <input formControlName="value" placeholder="Значение" />
+              </div>
+            } @else {
+              <div class="param-new">
+                <input class="param_name" formControlName="newParamName" placeholder="Название параметра" />
+                <ng-select
+                  [items]="measures() || []"
+                  bindLabel="value"
+                  bindValue="id"
+                  formControlName="newParamMeasureId"
+                  placeholder="Единица измерения"
+                  [virtualScroll]="true"
+                >
+                </ng-select>
+                <button type="button" (click)="createNewParam(i)" [disabled]="isLoading()">Создать</button>
+              </div>
+            }
+
+            <button type="button" class="remove-param" (click)="removeExtraParam(i)">✕</button>
+          </div>
+        }
+      </div>
+      <button type="button" class="add-param" (click)="addExtraParam()">+ Добавить параметр</button>
+    </div>
+
+    <!-- Сообщение об ошибке -->
+    @if (error()) {
+      <div class="server-error">{{ error() }}</div>
+    }
+
+    <!-- Кнопки -->
+    <div class="form-actions">
+      <button type="button" class="cancel" (click)="goBack()" [disabled]="isLoading()">Отмена</button>
+      <button type="submit" class="submit" [disabled]="productForm.invalid || isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span>
+        } @else {
+          Создать товар
+        }
+      </button>
+    </div>
+  </form>
+</div>

@@ -68,7 +68,10 @@ export class AuthService {
 
   async refresh(user: User) {
     const payload = { sub: user.id };
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_CONFIG').accessTokenSecret,
+      expiresIn: this.configService.get('JWT_CONFIG').accessTokenExpiresIn,
+    });
     return {
       accessToken,
     };

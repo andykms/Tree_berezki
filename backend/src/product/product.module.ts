@@ -3,7 +3,6 @@ import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Category } from '../category/entities/category.entity';
 import { ProductParam } from './entities/product-param.entity';
 import { FileMoveModule } from '../file-move/file-move.module';
 import { ProductImage } from './entities/product-image.entity';
@@ -16,16 +15,15 @@ import { CategoryModule } from '../category/category.module';
   providers: [ProductService],
   exports: [ProductService],
   imports: [
+    CategoryModule,
+    ShowcaseProductsModule,
+    ParamModule,
     TypeOrmModule.forFeature([
       Product,
-      Category,
       ProductParam,
       ProductImage,
     ]),
     FileMoveModule,
-    ParamModule,
-    ShowcaseProductsModule,
-    CategoryModule,
   ],
 })
 export class ProductModule {}

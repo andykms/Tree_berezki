@@ -30,14 +30,13 @@ export type TParamWithValue = {
 
 @Injectable()
 export class ProductService {
+  @Inject(CategoryService)
+  private readonly categoryService: CategoryService;
   @Inject(ParamService)
   private readonly paramService: ParamService;
 
   @Inject(ShowcaseProductsService)
   private readonly showcaseProductsService: ShowcaseProductsService;
-
-  @Inject(Category)
-  private readonly categoryService: CategoryService
 
   constructor(
     @InjectRepository(Product)
@@ -61,7 +60,7 @@ export class ProductService {
 
     //ищем все обязательные параметры категории
     const requiredParams =
-      await this.paramService.getParamsByCategory(categoryId);
+      (await this.categoryService.findRequiredParams(categoryId)).items;
 
     //Проверяем, что обязательные параметры заполнены
     const productParams: TParamWithValue[] = await this.__isFullRequiredParams(
